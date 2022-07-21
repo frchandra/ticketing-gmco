@@ -1,0 +1,75 @@
+version: '3.7'
+
+volumes: 
+    gmco-code: #change me
+        driver: local
+        driver_opts:
+            type: none
+            device: /home/chandra/CodeBase/Laravel/gmco/ #change me (needs full path)
+            o: bind 
+
+    gmco-db: #change me
+        driver: local
+        driver_opts:
+            type: none
+            device: /home/chandra/CodeBase/Laravel/gmco/.docker/dbdata #change me (needs full path)
+            o: bind
+
+    gmco-server: #change me
+        driver: local
+        driver_opts:
+            type: none
+            device: /home/chandra/CodeBase/Laravel/gmco/.docker/nginx/conf.d/ #change me (needs full path)
+            o: bind
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: .docker/app.Dockerfile
+        image: 'gmco-app' #change me
+        container_name: 'gmco-app' #change me
+        volumes:
+            - gmco-code:/var/www:Z
+            - ./.docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini:Z
+        networks:
+            - gmco-network #change me
+        depends_on:
+            - db
+    
+    server:       
+        image: nginx:alpine
+        container_name: 'gmco-nginx' #change me
+        restart: unless-stopped
+        tty: true
+        privileged: true
+        volumes:
+            - gmco-code:/var/www:z
+            - gmco-server:/etc/nginx/conf.d/:z #change this: ./.docker/nginx/conf.d/default.conf (fastcgi_pass default-laravel-app:9000;)
+        ports:
+            - "8000:80"
+        networks:
+            - gmco-network #change me
+
+
+    db:
+        image: 'mariadb:10.5-focal'
+        container_name: gmco-db #change me
+        restart: unless-stopped
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: gmco_db #change me
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_PASSWORD: root
+            MYSQL_USER: chandra
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+        volumes:
+            - gmco-db:/var/lib/mysql:Z
+        networks:
+            - gmco-network #change me
+
+networks:
+    gmco-network: #change me
+        driver: bridge
+        
