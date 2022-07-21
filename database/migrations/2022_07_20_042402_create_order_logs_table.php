@@ -20,6 +20,7 @@ class CreateOrderLogsTable extends Migration
             $table->string('seat_name');
             $table->unsignedBigInteger('price');
             $table->string('tf_proof');
+            $table->boolean('is_confirmed');
             $table->timestamps();
 
             $table->foreign('buyer_id')->references('buyer_id')->on('buyers');

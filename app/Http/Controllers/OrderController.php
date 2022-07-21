@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Http\Requests\OrderTicketRequest;
 use App\Models\Buyer;
 use App\Models\OrderLog;
 use App\Models\Seat;
@@ -10,7 +10,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use Symfony\Component\HttpFoundation\Response;
+use function response;
 use function var_dump;
+
 
 class OrderController extends Controller
 {
@@ -26,32 +28,30 @@ class OrderController extends Controller
                 \DB::rollBack();
                 return "seat {$seat} already taken";
             }
-            Seat::whereName($seat)->update(['is_reserved'=>Carbon::now()->timestamp+1800]);
+            Seat::whereName($seat)->update(['is_reserved'=>Carbon::now()->timestamp+60]); //todo string filtration
         }
         \DB::commit();
         $request->session()->put('seats', $seats);
         return response($request->all(), Response::HTTP_CREATED);
     }
 
-    public function orderTicket(Request $request){
+    public function orderTicket(OrderTicketRequest $request){
         $seats = $request->session()->get('seats');
+        if(!$seats){
+            return "belum melakukan cim";
+        }
         Buyer::updateOrCreate($request->only('email'), $request->only('first_name', 'last_name', 'phone'));
         $buyer = Buyer::whereEmail($request->only('email'))->first();
         \DB::beginTransaction();
         foreach ($seats['seat'] as $seatName) {
             $seat = Seat::whereName($seatName)->first();
-            if($seat['is_reserved'] < Carbon::now()->timestamp+1800){ //telat, session mu gak guna
-                //remove session
+            if($seat['is_reserved'] < Carbon::now()->timestamp){ //telat, session mu gak guna
+                $request->session()->forget('seats');
                 \DB::rollBack();
                 return "to late";
             }
-            if($seat['is_reserved'] < Carbon::now()->timestamp){ //belum ngecim
-                //remove session
-                \DB::rollBack();
-                return "you must reserved the seat first";
-            }
             if($seat['is_reserved'] == 9999999999){
-               //remove session
+                $request->session()->forget('seats');
                 \DB::rollBack();
                 return "seat {$seat['name']} is already taken";
             }
@@ -63,10 +63,11 @@ class OrderController extends Controller
                 'buyer_email' => $request->get('email'),
                 'seat_name' => $seat['name'],
                 'price' => $seat['price'],
-                'tf_proof' => '#'
+                'tf_proof' => '#',
+                'is_confirmed' => false
             ]);
         }
         \DB::commit();
-        return $seats;
+        return response($request->all(), Response::HTTP_CREATED);
     }
 }

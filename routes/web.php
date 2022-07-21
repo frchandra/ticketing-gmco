@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ResolveController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,8 +18,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 Route::get('/token', [OrderController::class, 'showToken']);
 
 Route::post('/reserve', [OrderController::class, 'reserveTicket']);
 Route::post('/order', [OrderController::class, 'orderTicket']);
+
+Route::post('/login-admin', [AuthController::class, 'login']);
+Route::middleware(['auth'])->group(function (){
+    Route::post('/create-admin', [AuthController::class, 'register']);
+    Route::post('/logout-admin', [AuthController::class, 'logout']);
+    Route::get('/resolve', [ResolveController::class, 'index']);
+    Route::post('/confirm', [ResolveController::class, 'confirmOrder']);
+});
+
+
