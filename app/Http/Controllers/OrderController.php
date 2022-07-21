@@ -28,7 +28,10 @@ class OrderController extends Controller
                 \DB::rollBack();
                 return "seat {$seat} already taken";
             }
-            Seat::whereName($seat)->update(['is_reserved'=>Carbon::now()->timestamp+60]); //todo string filtration
+            $affected = Seat::whereName($seat)->update(['is_reserved'=>Carbon::now()->timestamp+60]);
+            if($affected < 1){
+                return "cannot found seat {$seat}";
+            }
         }
         \DB::commit();
         $request->session()->put('seats', $seats);

@@ -26,7 +26,7 @@ class AuthController extends Controller{
         }
         $request->session()->regenerate();
         return response(['message' => 'success']);
-        return redirect()->intended('/token');
+//        return redirect()->intended('/token');
     }
 
     public function logout(Request $request){

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\ResolveController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,15 +22,20 @@ Route::get('/', function () {
 })->name('home');
 Route::get('/token', [OrderController::class, 'showToken']);
 
-Route::post('/reserve', [OrderController::class, 'reserveTicket']);
-Route::post('/order', [OrderController::class, 'orderTicket']);
 
-Route::post('/login-admin', [AuthController::class, 'login']);
+//Route::middleware(['guest'])->group(function (){
+    Route::post('/reserve', [OrderController::class, 'reserveTicket']);
+    Route::post('/order', [OrderController::class, 'orderTicket']);
+    Route::post('/login-admin', [AuthController::class, 'login']);
+//});
+
+
 Route::middleware(['auth'])->group(function (){
     Route::post('/create-admin', [AuthController::class, 'register']);
     Route::post('/logout-admin', [AuthController::class, 'logout']);
     Route::get('/resolve', [ResolveController::class, 'index']);
     Route::post('/confirm', [ResolveController::class, 'confirmOrder']);
+    Route::get('/owner', [OwnerController::class, 'index']);
 });
 
 
