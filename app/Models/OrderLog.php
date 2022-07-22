@@ -24,6 +24,18 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLog whereTfProof($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLog whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $buyer_email
+ * @property string $seat_name
+ * @property int $price
+ * @property int $is_confirmed
+ * @property int $case
+ * @property-read \App\Models\Buyer $buyer
+ * @property-read \App\Models\Seat $seat
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderLog whereBuyerEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderLog whereCase($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderLog whereIsConfirmed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderLog wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderLog whereSeatName($value)
  */
 class OrderLog extends Model{
     use HasFactory;

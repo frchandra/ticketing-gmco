@@ -23,11 +23,10 @@ Route::get('/', function () {
 Route::get('/token', [OrderController::class, 'showToken']);
 
 
-//Route::middleware(['guest'])->group(function (){
-    Route::post('/reserve', [OrderController::class, 'reserveTicket']);
-    Route::post('/order', [OrderController::class, 'orderTicket']);
-    Route::post('/login-admin', [AuthController::class, 'login']);
-//});
+
+Route::post('/reserve', [OrderController::class, 'reserveTicket']);
+Route::post('/order', [OrderController::class, 'orderTicket']);
+Route::post('/login-admin', [AuthController::class, 'login']);
 
 
 Route::middleware(['auth'])->group(function (){
@@ -36,9 +35,11 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/resolve', [ResolveController::class, 'index']);
     Route::post('/confirm', [ResolveController::class, 'confirmOrder']);
     Route::get('/owner', [OwnerController::class, 'index']);
-    Route::post('/attend/{id}', [OwnerController::class, 'setAttend']);
-    Route::post('/info-seat/{name}', [OwnerController::class, 'infoSeat']);
+    Route::get('/attend/{name}', [OwnerController::class, 'setAttend']);
+});
 
+Route::middleware(['checkout'])->group(function (){
+    Route::get('/seat-info/{name}', [OwnerController::class, 'seatInfo']);
 });
 
 

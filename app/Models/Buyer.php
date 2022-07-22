@@ -27,13 +27,15 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Buyer wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Buyer whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Seat[] $seats
+ * @property-read int|null $seats_count
  */
 class Buyer extends Model{
     use HasFactory;
 
     protected $guarded = [];
 
-    public function orderLog(){
+    public function seats(){
         return $this->belongsToMany(Seat::class, OrderLog::class);
     }
 }

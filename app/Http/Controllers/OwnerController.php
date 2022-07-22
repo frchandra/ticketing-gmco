@@ -16,8 +16,12 @@ class OwnerController extends Controller{
         return $data;
     }
 
-    public function setAttend($id){
-        Seat::whereSeatId($id)->update(['is_attend' => true]);
-        return response($id, Response::HTTP_CREATED);
+    public function setAttend($name){
+        Seat::whereName($name)->update(['is_attend' => true]);
+        return response($name, Response::HTTP_CREATED);
+    }
+
+    public function seatInfo($name){
+        return response($name, Response::HTTP_OK);
     }
 }

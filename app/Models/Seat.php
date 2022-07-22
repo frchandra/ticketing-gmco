@@ -22,13 +22,19 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Seat whereSeatId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Seat whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int $is_attend
+ * @property int $is_reserved
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Buyer[] $buyers
+ * @property-read int|null $buyers_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Seat whereIsAttend($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seat whereIsReserved($value)
  */
 class Seat extends Model{
     use HasFactory;
 
     protected $guarded = [];
 
-    public function buyer(){
+    public function buyers(){
         return $this->belongsToMany(Buyer::class, OrderLog::class);
     }
 }

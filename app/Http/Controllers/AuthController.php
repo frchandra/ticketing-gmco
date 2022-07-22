@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-use function cookie;
 use function redirect;
 use function response;
 
@@ -25,8 +24,8 @@ class AuthController extends Controller{
             ]", Response::HTTP_UNAUTHORIZED);
         }
         $request->session()->regenerate();
+        $request->session()->put('is_gmco', true);
         return response(['message' => 'success']);
-//        return redirect()->intended('/token');
     }
 
     public function logout(Request $request){
