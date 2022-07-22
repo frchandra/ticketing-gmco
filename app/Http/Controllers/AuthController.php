@@ -17,7 +17,7 @@ class AuthController extends Controller{
         return response($user, Response::HTTP_CREATED);
     }
 
-    public function login(Request $request){
+    public function login(RegisterRequest $request){
         if (!Auth::attempt($request->only('name', 'password'))) {
             return response("[
                 'error' => 'invalid credentials'

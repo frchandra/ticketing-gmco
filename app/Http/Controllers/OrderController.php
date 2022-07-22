@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderTicketRequest;
+use App\Jobs\SendMailJob;
 use App\Models\Buyer;
 use App\Models\OrderLog;
 use App\Models\Seat;
@@ -46,13 +47,17 @@ class OrderController extends Controller
         $seats = $request->session()->get('seats');
         if(!$seats)return "belum melakukan cim";
 
-        Buyer::updateOrCreate($request->only('email'), $request->only('first_name', 'last_name', 'phone'));
-        $buyer = Buyer::whereEmail($request->only('email'))->first();
-        $email = $request->get('email');
+        //constant declaration
         $time = Carbon::now();
-        $path = $request->file('tf_proof')->storeAs('tf_proof', "{$email}_{$time}.png");
         $case = 0;
         $conflictSeat = array();
+        $purchasedSeat = array();
+
+        Buyer::updateOrCreate($request->only('email'), $request->only('first_name', 'last_name', 'phone'));
+        $buyer = Buyer::whereEmail($request->only('email'))->first();
+
+        $email = $request->get('email');
+        $path = $request->file('tf_proof')->storeAs('tf_proof', "{$email}_{$time}.png");
 
         \DB::beginTransaction();
         foreach ($seats['seat'] as $seatName) {
@@ -64,7 +69,6 @@ class OrderController extends Controller
                 $case = 1;
                 array_push($conflictSeat, $seatName);
             }
-
 
             //store to log
             Seat::whereSeatId($seat['seat_id'])->update(['is_reserved'=>9999999999]);
@@ -78,12 +82,26 @@ class OrderController extends Controller
                 'is_confirmed' => false,
                 'case' => $case
             ]);
+            array_push($purchasedSeat, $seatName);
         }
         \DB::commit();
-        $request->session()->forget('seats');
+
         $conflictSeatString = implode(", ", $conflictSeat);
+
+        //send email
+        $data = array();
+        $data['email'] = $email;
+        $data['email_type'] = 1;
+        $this->dispatch(new SendMailJob($data));
+
+        //send again
+        $data['email_type'] = 2;
+        $data['purchased'] = $purchasedSeat;
+        $data['conflict'] = $conflictSeat;
+        $this->dispatch(new SendMailJob($data));
+
+        $request->session()->forget('seats');
         if($case == 1) return "anda kelamaan dalam proses transaksi, kursi ini telah di beli {$conflictSeatString}, silakan hubungi admin utk refund";
-//        else if($case ==2)return "case2";
         else return response($request->all(), Response::HTTP_CREATED);
     }
 }

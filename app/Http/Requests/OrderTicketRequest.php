@@ -26,7 +26,8 @@ class OrderTicketRequest extends FormRequest
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'required|email',
-            'phone' => 'required|numeric'
+            'phone' => 'required|numeric',
+            'tf_proof' => 'required|image|file|max:2048'
         ];
     }
 }

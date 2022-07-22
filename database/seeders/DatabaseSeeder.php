@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
                 Seat::create([
                     'name' => $name,
                     'price' => $price,
-//                    'link' => '#',
+                    'link' => '#',
                     'is_attend' => false,
                     'is_reserved' => false
                 ]);
@@ -32,9 +32,8 @@ class DatabaseSeeder extends Seeder
         }
 
         User::create([
-            'name' => env('ADMIN_UNAME'),
-            'password' => \Hash::make(env('ADMIN_PASS')), // password
-            'remember_token' => Str::random(10),
+            'name' => 'gmco',
+            'password' => \Hash::make('w00d-w!nd'),
         ]);
 
         $this->call([
