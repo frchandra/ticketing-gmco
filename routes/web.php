@@ -36,6 +36,9 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/resolve', [ResolveController::class, 'index']);
     Route::post('/confirm', [ResolveController::class, 'confirmOrder']);
     Route::get('/owner', [OwnerController::class, 'index']);
+    Route::post('/attend/{id}', [OwnerController::class, 'setAttend']);
+    Route::post('/info-seat/{name}', [OwnerController::class, 'infoSeat']);
+
 });
 
 

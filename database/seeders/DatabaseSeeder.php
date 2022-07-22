@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
                 Seat::create([
                     'name' => $name,
                     'price' => $price,
-                    'link' => '#',
+//                    'link' => '#',
                     'is_attend' => false,
                     'is_reserved' => false
                 ]);

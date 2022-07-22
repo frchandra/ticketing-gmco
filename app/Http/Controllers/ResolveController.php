@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\OrderLog;
+use App\Models\Seat;
 use App\Models\TicketOwnership;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,6 +23,7 @@ class ResolveController extends Controller{
                 'seat_id' => $seat_id,
                 'buyer_id' => $request->get('buyer_id')
             ]);
+
         }
         return response($request->all(), Response::HTTP_CREATED);
     }

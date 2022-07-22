@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\OrderLog
+ * App\Models\OrderLoglog
  *
  * @property int $orderLog_id
  * @property int $buyer_id
