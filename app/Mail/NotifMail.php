@@ -28,6 +28,6 @@ class NotifMail extends Mailable
      * @return $this
      */
     public function build(){
-        return $this->subject("ticketing")->view('notify', ['data' => $this->data]);
+        return $this->subject("info pemesanan")->view('notify', ['data' => $this->data]);
     }
 }

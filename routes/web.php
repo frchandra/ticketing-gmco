@@ -22,18 +22,24 @@ Route::get('/', function () {
 })->name('home');
 Route::get('/token', [OrderController::class, 'showToken']);
 
-
-
+Route::get('/reserve', [OrderController::class, 'reserveIndex']);
 Route::post('/reserve', [OrderController::class, 'reserveTicket']);
+Route::get('/order', [OrderController::class, 'orderIndex']);
 Route::post('/order', [OrderController::class, 'orderTicket']);
+Route::get('/login-admin', [AuthController::class, 'indexLogin']);
 Route::post('/login-admin', [AuthController::class, 'login']);
 
 
 Route::middleware(['auth'])->group(function (){
     Route::post('/create-admin', [AuthController::class, 'register']);
-    Route::post('/logout-admin', [AuthController::class, 'logout']);
+    Route::get('/logout-admin', [AuthController::class, 'logout']);
+
     Route::get('/resolve', [ResolveController::class, 'index']);
+    Route::get('/tf_proof/{path}', [ResolveController::class, 'showTf']);
     Route::post('/confirm', [ResolveController::class, 'confirmOrder']);
+
+    Route::get('/sold', [OwnerController::class, 'index']);
+
     Route::get('/owner', [OwnerController::class, 'index']);
     Route::get('/attend/{name}', [OwnerController::class, 'setAttend']);
 });

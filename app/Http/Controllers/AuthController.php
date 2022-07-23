@@ -9,8 +9,12 @@ use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use function redirect;
 use function response;
+use function view;
 
 class AuthController extends Controller{
+    public function indexLogin(){
+        return view('login');
+    }
 
     public function register(RegisterRequest $request){ //todo fix request filtration
         $user = User::updateOrCreate($request->only('name') , ['password' => \Hash::make($request->input('password'))]);
@@ -31,7 +35,7 @@ class AuthController extends Controller{
     public function logout(Request $request){
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+        return response(['message' => 'success']);
     }
 
 }

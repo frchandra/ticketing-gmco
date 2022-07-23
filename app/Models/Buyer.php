@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Model;
 class Buyer extends Model{
     use HasFactory;
 
+    protected $primaryKey = 'buyer_id';
+
     protected $guarded = [];
 
     public function seats(){

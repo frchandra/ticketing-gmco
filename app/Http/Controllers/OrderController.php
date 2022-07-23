@@ -13,8 +13,10 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use function array_push;
 use function implode;
+use function redirect;
 use function response;
 use function var_dump;
+use function view;
 
 
 class OrderController extends Controller
@@ -23,14 +25,24 @@ class OrderController extends Controller
         echo csrf_token();
     }
 
+    public function reserveIndex(){
+        $seats = Seat::select(['name', 'is_reserved'])->get();
+        return view('reserve', ["seats" => $seats]);
+    }
 
+    public function orderIndex(Request $request){
+        $seats = $request->session()->get('seats');
+        if(!$seats)return "belum melakukan cim";
+        return view('order', ["seats" => $seats]);
+    }
 
     public function reserveTicket(Request $request){
         $seats = $request->only('seat');
+        $isHasSeatSession = $request->session()->get('seats');
 
         \DB::beginTransaction();
         foreach ($seats['seat'] as $seat) {
-            if(Seat::whereName($seat)->value('is_reserved') > Carbon::now()->timestamp){ //kursi udah ada yang ngecim
+            if(Seat::whereName($seat)->value('is_reserved') > Carbon::now()->timestamp && !$isHasSeatSession){ //kursi udah ada yang ngecim
                 \DB::rollBack();
                 return "seat {$seat} already taken";
             }
@@ -40,7 +52,8 @@ class OrderController extends Controller
         \DB::commit();
 
         $request->session()->put('seats', $seats);
-        return response($request->all(), Response::HTTP_CREATED);
+//        return response($request->all(), Response::HTTP_CREATED);
+        return redirect('/order');
     }
 
     public function orderTicket(OrderTicketRequest $request){
@@ -48,7 +61,7 @@ class OrderController extends Controller
         if(!$seats)return "belum melakukan cim";
 
         //constant declaration
-        $time = Carbon::now();
+        $time = Carbon::now()->timestamp;
         $case = 0;
         $conflictSeat = array();
         $purchasedSeat = array();
@@ -76,6 +89,8 @@ class OrderController extends Controller
                 'buyer_id' => $buyer->buyer_id,
                 'seat_id' => $seat['seat_id'],
                 'buyer_email' => $request->get('email'),
+                'buyer_phone' => $buyer->phone,
+                'buyer_fname' => $buyer->first_name,
                 'seat_name' => $seat['name'],
                 'price' => $seat['price'],
                 'tf_proof' => $path,
@@ -102,6 +117,7 @@ class OrderController extends Controller
 
         $request->session()->forget('seats');
         if($case == 1) return "anda kelamaan dalam proses transaksi, kursi ini telah di beli {$conflictSeatString}, silakan hubungi admin utk refund";
-        else return response($request->all(), Response::HTTP_CREATED);
+//        else return response($request->all(), Response::HTTP_CREATED);
+        else return redirect('/reserve');
     }
 }

@@ -17,6 +17,8 @@ class CreateOrderLogsTable extends Migration
             $table->unsignedBigInteger('buyer_id');
             $table->unsignedBigInteger('seat_id');
             $table->string('buyer_email');
+            $table->string('buyer_phone');
+            $table->string('buyer_fname');
             $table->string('seat_name');
             $table->unsignedBigInteger('price');
             $table->string('tf_proof');
