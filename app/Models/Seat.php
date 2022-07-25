@@ -28,6 +28,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $buyers_count
  * @method static \Illuminate\Database\Eloquent\Builder|Seat whereIsAttend($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Seat whereIsReserved($value)
+ * @property string $link
+ * @method static \Illuminate\Database\Eloquent\Builder|Seat whereLink($value)
  */
 class Seat extends Model{
     use HasFactory;

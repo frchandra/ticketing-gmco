@@ -18,8 +18,8 @@ class CheckoutMiddleware
      */
     public function handle(Request $request, Closure $next){
         if ($request->session()->get('is_gmco') === true){
-            $name = $request->route()->parameter('name');
-            return redirect(env('APP_URL')."/attend/{$name}");
+            $unique = $request->route()->parameter('unique');
+            return redirect(env('APP_URL')."/attend/{$unique}");
         }
         else{
             return $next($request);

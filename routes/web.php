@@ -41,11 +41,13 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/sold', [OwnerController::class, 'index']);
 
     Route::get('/owner', [OwnerController::class, 'index']);
-    Route::get('/attend/{name}', [OwnerController::class, 'setAttend']);
+    Route::get('/attend/{unique}', [OwnerController::class, 'indexSetAttend']);
+    Route::post('/attend/{unique}', [OwnerController::class, 'setAttend']);
+    Route::get('/unattend/{name}', [OwnerController::class, 'setUnAttend']);
 });
 
 Route::middleware(['checkout'])->group(function (){
-    Route::get('/seat-info/{name}', [OwnerController::class, 'seatInfo']);
+    Route::get('/seat-info/{unique}', [OwnerController::class, 'seatInfo']);
 });
 
 

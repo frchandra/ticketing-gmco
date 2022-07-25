@@ -36,6 +36,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLog whereIsConfirmed($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLog wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLog whereSeatName($value)
+ * @property string $buyer_phone
+ * @property string $buyer_fname
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderLog whereBuyerFname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderLog whereBuyerPhone($value)
  */
 class OrderLog extends Model{
     use HasFactory;

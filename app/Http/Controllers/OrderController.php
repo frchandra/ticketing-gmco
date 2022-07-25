@@ -37,6 +37,7 @@ class OrderController extends Controller
     }
 
     public function reserveTicket(Request $request){
+        $request->validate(['seat' => 'required']);
         $seats = $request->only('seat');
         $isHasSeatSession = $request->session()->get('seats');
 
