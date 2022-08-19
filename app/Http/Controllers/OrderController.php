@@ -16,6 +16,7 @@ use function implode;
 use function redirect;
 use function response;
 use function var_dump;
+use function version_compare;
 use function view;
 
 
@@ -30,8 +31,13 @@ class OrderController extends Controller
         return view('reserve', ["seats" => $seats]);
     }
 
-    public function orderIndex(Request $request){
+    public function orderIndex(Request $request){ //todo ngeleboke rego kursi ning fe (uis)
         $seats = $request->session()->get('seats');
+        $seats['price'] = array();
+        foreach($seats['seat'] as $name) {
+            $price = Seat::whereName($name)->value('price');
+            array_push($seats['price'], $price);
+        }
         if(!$seats)return "belum melakukan cim";
         return view('order', ["seats" => $seats]);
     }

@@ -20,6 +20,9 @@
     @foreach($seats['seat'] as $seat)
         <h3>{{$seat}}</h3><br>
     @endforeach
+    @foreach($seats['price'] as $seat)
+        <h3>{{$seat}}</h3><br>
+    @endforeach
 
     @error('first_name')
         <h3>{{$message}}</h3>
