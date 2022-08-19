@@ -73,8 +73,7 @@ class OrderController extends Controller
         $conflictSeat = array();
         $purchasedSeat = array();
 
-        Buyer::updateOrCreate($request->only('email'), $request->only('first_name', 'last_name', 'phone'));
-        $buyer = Buyer::whereEmail($request->only('email'))->first();
+        $buyer = Buyer::updateOrCreate($request->only('email'), $request->only('first_name', 'last_name', 'phone'));
 
         $email = $request->get('email');
         $path = $request->file('tf_proof')->storeAs('tf_proof', "{$email}_{$time}.png");
@@ -116,7 +115,7 @@ class OrderController extends Controller
         $data['email_type'] = 1;
         $this->dispatch(new SendMailJob($data));
 
-        //send again
+        //send again to admin
         $data['email_type'] = 2;
         $data['purchased'] = $purchasedSeat;
         $data['conflict'] = $conflictSeat;

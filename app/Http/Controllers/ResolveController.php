@@ -27,7 +27,7 @@ class ResolveController extends Controller{
             $total = OrderLog::where('tf_proof', '=', $buyer['tf_proof'])->where('is_confirmed', '=', 'false')->sum('price');
             $temp = array();
             foreach ($seats as $seat)
-                array_push($temp, $seat['seat_name']);
+            array_push($temp, $seat['seat_name']);
             $buyer['seatsCount'] = count($temp);
             $buyer['seats'] = $temp;
             $buyer['price'] = $total;
