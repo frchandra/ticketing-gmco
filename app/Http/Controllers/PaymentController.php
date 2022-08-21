@@ -27,7 +27,7 @@ use function strtoupper;
 use function substr;
 use function var_dump;
 use function view;
-use const READLINE_LIB;
+
 
 
 class PaymentController extends Controller{
@@ -56,7 +56,7 @@ class PaymentController extends Controller{
 
         //constant declaration
         $case = 0; $gross_amount=0;
-        $conflictSeat = array(); $paymentDetails = array();
+        $conflictSeat = array(); $paymentDetails = array(); $purchasedSeat = array();
 
         $buyer = Buyer::updateOrCreate($request->only('email'), $request->only('first_name', 'last_name', 'phone'));
 
@@ -95,7 +95,7 @@ class PaymentController extends Controller{
             $gross_amount = $gross_amount + $seat['price'];
             $seatDetails = ["name" => $seatName, "price" => $seat['price'], "quantity" => 1, "id"=>$seatName];
             array_push($paymentDetails["item_details"], $seatDetails);
-//
+            array_push($purchasedSeat, $seatDetails["name"]);
         }
         $paymentDetails["transaction_details"]["gross_amount"] = $gross_amount;
         $snapToken = $this->invokeMidtrans($paymentDetails);
@@ -108,7 +108,7 @@ class PaymentController extends Controller{
 
         //send again to admin
         $data['email_type'] = 2;
-        $data['purchased'] = $paymentDetails;
+        $data['purchased'] = $purchasedSeat;
         $data['conflict'] = $conflictSeat;
         $this->dispatch(new SendMailJob($data));
 
@@ -148,23 +148,19 @@ class PaymentController extends Controller{
             }
 
             $uniqueKey=strtoupper(substr(sha1(microtime()), rand(0, 5), 6));
-            \QrCode::size(300)->format('png')->generate(env('APP_URL')."/seat-info/{$uniqueKey}", "/var/www/storage/app/qr/{$seat['name']}.png");
+            \QrCode::size(300)->format('png')->generate(env('APP_URL')."/seat-info/{$uniqueKey}", "/var/www/storage/app/qr/{$seat['seat_name']}.png");
             Seat::whereName($seat['seat_name'])->update(['link' => $uniqueKey]);
-
+            Seat::whereName($seat['seat_name'])->update(['is_reserved'=>9999999999]);
             TicketOwnership::updateOrCreate([
                 'seat_id' => $seat['seat_id'],
                 'buyer_id' => $seat['buyer_id']
             ]);
-//            up([
-//                'seat_id' => $seat['seat_id'],
-//                'buyer_id' => $seat['buyer_id']
-//            ]);
         }
-        $buyer = OrderLog::whereTransactionId($order_id)->select('buyer_id')->distinct()->first();
+        $buyer = Buyer::whereBuyerId($seat['buyer_id'])->first(); // whereTransactionId($order_id)->distinct()->get();
         $data = array();
         $data['first_name'] = $buyer['first_name'];
         $data['last_name'] = $buyer['last_name'];
-        $data['seats'] = $seats->get('seat_name');
+        $data['seats'] = \Arr::pluck($seats->toArray(), 'seat_name');
         $data['email_type'] = 3; //3 confirm; 2 notify; 1 ack
         $data['email'] = $buyer['email'];
 
