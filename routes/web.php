@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ResolveController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,9 +26,11 @@ Route::get('/token', [OrderController::class, 'showToken']);
 Route::get('/reserve', [OrderController::class, 'reserveIndex']);
 Route::post('/reserve', [OrderController::class, 'reserveTicket']);
 Route::get('/order', [OrderController::class, 'orderIndex']);
-Route::post('/order', [OrderController::class, 'orderTicket']);
+Route::post('/order', [PaymentController::class, 'orderTicket']);
 Route::get('/login-admin', [AuthController::class, 'indexLogin']);
 Route::post('/login-admin', [AuthController::class, 'login']);
+
+
 
 
 Route::middleware(['auth'])->group(function (){

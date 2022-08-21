@@ -33,6 +33,7 @@ class OrderController extends Controller
 
     public function orderIndex(Request $request){ //todo ngeleboke rego kursi ning fe (uis)
         $seats = $request->session()->get('seats');
+        if(!$seats) { return "belum ngecim";}
         $seats['price'] = array();
         foreach($seats['seat'] as $name) {
             $price = Seat::whereName($name)->value('price');

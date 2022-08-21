@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post("/midtrans-payment-callback-0", [PaymentController::class, 'callbackHandler']);
+//Route::post("/midtrans-payment-callback-1", [PaymentController::class, 'callbackHandler1']);

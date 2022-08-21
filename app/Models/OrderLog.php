@@ -40,6 +40,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $buyer_fname
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLog whereBuyerFname($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLog whereBuyerPhone($value)
+ * @property int $transaction_id
+ * @property string $vendor
+ * @property string $confirmation
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderLog whereConfirmation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderLog whereTransactionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderLog whereVendor($value)
  */
 class OrderLog extends Model{
     use HasFactory;
