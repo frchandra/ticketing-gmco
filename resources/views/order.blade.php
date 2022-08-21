@@ -11,7 +11,7 @@
     <h1>Kursi yg Anda pilih</h1>
     <form action="./order" method="post" enctype="multipart/form-data">
         @csrf
-        @foreach($seats['seat'] as $seat)
+        @foreach($seats['name'] as $seat)
             <h3>{{$seat}}</h3><br>
         @endforeach
         @foreach($seats['price'] as $seat)

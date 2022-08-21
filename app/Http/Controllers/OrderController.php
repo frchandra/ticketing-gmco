@@ -11,8 +11,12 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use Symfony\Component\HttpFoundation\Response;
+use function array_merge;
+use function array_merge_recursive_distinct;
 use function array_push;
+use function array_unique;
 use function implode;
+use function in_array;
 use function redirect;
 use function response;
 use function var_dump;
@@ -20,8 +24,18 @@ use function version_compare;
 use function view;
 
 
-class OrderController extends Controller
-{
+class OrderController extends Controller{
+    public function storeReserveSeat($seatNameInRequest){
+        \DB::beginTransaction();
+        if(Seat::whereName($seatNameInRequest)->value('is_reserved') > Carbon::now()->timestamp){
+            \DB::rollBack();
+            return "seat {$seatNameInRequest} already taken";
+        }
+        $affected = Seat::whereName($seatNameInRequest)->update(['is_reserved'=>Carbon::now()->timestamp+60*10]);//todo : mau berapa lama?
+        if($affected < 1)return "cannot found seat {$seatNameInRequest}";
+        \DB::commit();
+    }
+
     public function showToken(){
         echo csrf_token();
     }
@@ -32,40 +46,46 @@ class OrderController extends Controller
     }
 
     public function orderIndex(Request $request){ //todo ngeleboke rego kursi ning fe (uis)
-        $seats = $request->session()->get('seats');
+        $seats['name'] = $request->session()->get('seatsNameInSession');
         if(!$seats) { return "belum ngecim";}
         $seats['price'] = array();
-        foreach($seats['seat'] as $name) {
-            $price = Seat::whereName($name)->value('price');
+        foreach($seats['name'] as $seatsName) {
+            $price = Seat::whereName($seatsName)->value('price');
             array_push($seats['price'], $price);
         }
-        if(!$seats)return "belum melakukan cim";
         return view('order', ["seats" => $seats]);
     }
 
     public function reserveTicket(Request $request){
         $request->validate(['seat' => 'required']);
-        $seats = $request->only('seat');
-        $isHasSeatSession = $request->session()->get('seats');
+        $seatsNameInRequest = $request->only('seat')['seat'];
+        $seatsNameInSession = $request->session()->get('seatsNameInSession');
+        $errorMsg = "";
 
-        \DB::beginTransaction();
-        foreach ($seats['seat'] as $seat) {
-            if(Seat::whereName($seat)->value('is_reserved') > Carbon::now()->timestamp && !$isHasSeatSession){ //kursi udah ada yang ngecim
-                \DB::rollBack();
-                return "seat {$seat} already taken";
+        if($seatsNameInSession == null){
+            foreach ($seatsNameInRequest as $seatNameInRequest) {
+                $errorMsg = $this->storeReserveSeat($seatNameInRequest);if($errorMsg != null) return $errorMsg;
             }
-            $affected = Seat::whereName($seat)->update(['is_reserved'=>Carbon::now()->timestamp+60]);//todo : mau berapa lama?
-            if($affected < 1)return "cannot found seat {$seat}";
-        }
-        \DB::commit();
+            $request->session()->put('seatsNameInSession',  $seatsNameInRequest);
+//            return $seatsNameInSession;
+            return redirect('/order');
 
-        $request->session()->put('seats', $seats);
-//        return response($request->all(), Response::HTTP_CREATED);
-        return redirect('/order');
+        }
+        else{
+            foreach ($seatsNameInRequest as $seatNameInRequest){
+                if(in_array($seatNameInRequest, $seatsNameInSession) == false){
+                    $errorMsg = $this->storeReserveSeat($seatNameInRequest);if($errorMsg != null) return $errorMsg;
+                }
+            }
+            $request->session()->put('seatsNameInSession', array_unique(array_merge($seatsNameInSession, $seatsNameInRequest)));
+//            return $seatsNameInSession;
+            return redirect('/order');
+        }
+
     }
 
     public function orderTicket(OrderTicketRequest $request){
-        $seats = $request->session()->get('seats');
+        $seats = $request->session()->get('seatsNameInSession');
         if(!$seats)return "belum melakukan cim";
 
         //constant declaration
@@ -122,7 +142,7 @@ class OrderController extends Controller
         $data['conflict'] = $conflictSeat;
         $this->dispatch(new SendMailJob($data));
 
-        $request->session()->forget('seats');
+//        $request->session()->forget('seats');
         if($case == 1) return "anda kelamaan dalam proses transaksi, kursi ini telah di beli {$conflictSeatString}, silakan hubungi admin utk refund";
 //        else return response($request->all(), Response::HTTP_CREATED);
         else return redirect('/reserve');

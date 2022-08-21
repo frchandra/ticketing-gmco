@@ -112,7 +112,7 @@ class PaymentController extends Controller{
         $data['conflict'] = $conflictSeat;
         $this->dispatch(new SendMailJob($data));
 
-        $request->session()->forget('seats');
+//        $request->session()->forget('seats');
         $conflictSeatString = implode(", ", $conflictSeat);
         if($case == 1) return "anda kelamaan dalam proses transaksi, kursi ini telah di beli {$conflictSeatString}, silakan hubungi admin utk refund";
 //        else return response($paymentDetails, Response::HTTP_CREATED);
