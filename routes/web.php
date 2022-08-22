@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
-Route::get('/token', [OrderController::class, 'showToken']);
+//Route::get('/token', [OrderController::class, 'showToken']);
 
 Route::get('/reserve', [OrderController::class, 'reserveIndex']);
 Route::post('/reserve', [OrderController::class, 'reserveTicket']);
@@ -38,15 +38,17 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/logout-admin', [AuthController::class, 'logout']);
 
     Route::get('/resolve', [ResolveController::class, 'index']);
-    Route::get('/tf_proof/{path}', [ResolveController::class, 'showTf']);
-    Route::post('/confirm', [ResolveController::class, 'confirmOrder']);
+//    Route::get('/tf_proof/{path}', [ResolveController::class, 'showTf']);
+//    Route::post('/confirm', [ResolveController::class, 'confirmOrder']);
 
     Route::get('/sold', [OwnerController::class, 'index']);
 
     Route::get('/owner', [OwnerController::class, 'index']);
     Route::get('/attend/{unique}', [OwnerController::class, 'indexSetAttend']);
     Route::post('/attend/{unique}', [OwnerController::class, 'setAttend']);
-    Route::get('/unattend/{name}', [OwnerController::class, 'setUnAttend']);
+    Route::post('/not-attend/{name}', [OwnerController::class, 'setNotAttend']);
+    Route::post('/get-ticket/{unique}', [OwnerController::class, 'setGetTicket']);
+    Route::post('/not-get-ticket/{name}', [OwnerController::class, 'setNotGetTicket']);
 });
 
 Route::middleware(['checkout'])->group(function (){

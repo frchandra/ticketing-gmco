@@ -43,29 +43,30 @@ class PaymentController extends Controller{
         // Set 3DS transaction for credit card to true
         \Midtrans\Config::$is3ds = true;
 
-        $params = $paymentDetails;
-
-        $snapToken = \Midtrans\Snap::getSnapToken($params);
+        $paymentDetails["gopay"] = ["enable_callback" => true, "callback_url" => "http://127.0.0.1"];
+        $paymentDetails["shopeepay"] = ["callback_url" => "http://127.0.0.1"];
+        $paymentDetails["callbacks"] = ['finish' => "http://127.0.0.1"];
+        $snapToken = \Midtrans\Snap::getSnapToken($paymentDetails);
 
         return $snapToken;
     }
 
     public function orderTicket(OrderTicketRequest $request){
-        $seats = $request->session()->get('seats');
+        $seats = $request->session()->get('seatsNameInSession');
         if(!$seats)return "belum melakukan cim";
 
         //constant declaration
         $case = 0; $gross_amount=0;
         $conflictSeat = array(); $paymentDetails = array(); $purchasedSeat = array();
 
-        $buyer = Buyer::updateOrCreate($request->only('email'), $request->only('first_name', 'last_name', 'phone'));
+        $buyer = Buyer::updateOrCreate($request->only('email','first_name', 'last_name'), $request->only('phone'));
 
         $paymentDetails["transaction_details"] = ["order_id"=>Carbon::now()->timestamp, "gross_amount" => $gross_amount];
         $paymentDetails["customer_details"] = $buyer->toArray();
         $paymentDetails["item_details"] = array();
 
 
-        foreach ($seats['seat'] as $seatName) {
+        foreach ($seats as $seatName) {
             \DB::beginTransaction();
             $seat = Seat::whereName($seatName)->first();
             if($seat['is_reserved'] !== 9999999999) { //if (telat?) dan yang penting masih kosong : proceed -> //store to log with (2:lucky) //return biasa

@@ -21,19 +21,14 @@ use function view;
 
 class ResolveController extends Controller{
     public function index(){
-        $buyers = OrderLog::select(['buyer_email', 'buyer_phone', 'buyer_fname', 'tf_proof', 'buyer_id'])->where('is_confirmed', '=', 'false')->distinct()->get();
+        $buyers = OrderLog::select(['transaction_id', 'buyer_email', 'buyer_phone', 'buyer_fname', 'vendor', 'confirmation']) ->distinct()->get();
         foreach ($buyers as $buyer) {
-            $seats = OrderLog::select(['seat_name'])->where('tf_proof', '=', $buyer['tf_proof'])->where('is_confirmed', '=', 'false')->get();
-            $total = OrderLog::where('tf_proof', '=', $buyer['tf_proof'])->where('is_confirmed', '=', 'false')->sum('price');
-            $temp = array();
-            foreach ($seats as $seat)
-            array_push($temp, $seat['seat_name']);
-            $buyer['seatsCount'] = count($temp);
-            $buyer['seats'] = $temp;
+            $seats = OrderLog::select(['seat_name'])->where('transaction_id', '=', $buyer['transaction_id'])->where('confirmation', '!=', 'settlement||capture')->get();
+            $total = OrderLog::select(['price'])->where('transaction_id', '=', $buyer['transaction_id'])->where('confirmation', '!=', 'settlement||capture')->sum('price');
+            $buyer['seatsCount'] = count($seats);
+            $buyer['seats'] = $seats->pluck('seat_name');
             $buyer['price'] = $total;
-
         }
-//        return $buyers;
         return view('resolve', ['orders' => $buyers]);
     }
 

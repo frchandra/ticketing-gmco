@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
                     'name' => $name,
                     'price' => $price,
                     'link' => '#',
-                    'is_attend' => false,
+                    'attendStatus' => 0,
                     'is_reserved' => false
                 ]);
             }

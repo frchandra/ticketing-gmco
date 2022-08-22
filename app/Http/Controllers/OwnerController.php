@@ -23,8 +23,14 @@ class OwnerController extends Controller{
         $seat = Seat::whereLink($unique)->first();
         $data = array();
         $data['warning']="aman";
-        if($seat['is_attend']){
+        if($seat['attendStatus']==2){
             $data['warning']="awas! sudah pernah discan";
+        }
+        else if($seat['attendStatus']==1){
+            $data['warning']="sudah tukar tiket";
+        }
+        else if($seat['attendStatus']==0){
+            $data['warning']="belum tukar tiket";
         }
         $buyer = TicketOwnership::whereSeatId($seat['seat_id'])->first();
         $buyer = Buyer::whereBuyerId($buyer['buyer_id'])->first();
@@ -38,13 +44,23 @@ class OwnerController extends Controller{
     }
 
     public function setAttend($unique){
-        Seat::whereLink($unique)->update(['is_attend' => true]);
+        Seat::whereLink($unique)->update(['attendStatus' => 2]);
         return response($unique, Response::HTTP_CREATED);
     }
 
-    public function setUnAttend($name){
-        Seat::whereName($name)->update(['is_attend' => false]);
-        return response($name, Response::HTTP_OK);
+    public function setNotAttend($unique){
+        Seat::whereLink($unique)->update(['attendStatus' => 1]);
+        return response($unique, Response::HTTP_OK);
+    }
+
+    public function setGetTicket($unique){
+        Seat::whereLink($unique)->update(['attendStatus' => 1]);
+        return response($unique, Response::HTTP_OK);
+    }
+
+    public function setNotGetTicket($unique){
+        Seat::whereLink($unique)->update(['attendStatus' => 0]);
+        return response($unique, Response::HTTP_OK);
     }
 
     public function seatInfo($unique){

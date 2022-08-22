@@ -17,7 +17,7 @@ class CreateSeatsTable extends Migration
             $table->string('name');
             $table->bigInteger('price');
             $table->string('link');
-            $table->boolean('is_attend');
+            $table->unsignedSmallInteger('attendStatus');
             $table->unsignedBigInteger('is_reserved'); //unix timestamp
             $table->timestamps();
         });

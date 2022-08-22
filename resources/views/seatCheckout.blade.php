@@ -19,7 +19,22 @@
 
 <form action="/attend/{{$data['unique']}}" method="post">
     @csrf
-    <input type="submit" value="Submit">
+    <input type="submit" value="setHadir">
+</form>
+
+<form action="/non-attend/{{$data['unique']}}" method="post">
+    @csrf
+    <input type="submit" value="setTidakHadir">
+</form>
+
+<form action="/get-ticket/{{$data['unique']}}" method="post">
+    @csrf
+    <input type="submit" value="setPunyaTiket">
+</form>
+
+<form action="/not-get-ticket/{{$data['unique']}}" method="post">
+    @csrf
+    <input type="submit" value="setTidakPunyaTiket">
 </form>
 
 

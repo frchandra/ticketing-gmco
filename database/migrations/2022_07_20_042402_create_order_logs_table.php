@@ -24,9 +24,9 @@ class CreateOrderLogsTable extends Migration
             $table->unsignedBigInteger('price');
             $table->string('vendor');
             $table->string('confirmation');
-            $table->unsignedSmallInteger('case'); // 0=normal; mennyelesaikan transaksi tepatwaktu,
+            $table->boolean('case'); // 0=normal; mennyelesaikan transaksi tepatwaktu,luck; menyelesaikan transaksi telat -> terlanjur tf tapi kursi masih kosong
                                                         // 1=to_late; menyelesaikan transaksi telat-> terlanjur transfer dan gak dapet kursi
-                                                        // 2=luck; menyelesaikan transaksi telat -> terlanjur tf tapi kursi masih kosong
+
             $table->timestamps();
 
             $table->foreign('buyer_id')->references('buyer_id')->on('buyers');
