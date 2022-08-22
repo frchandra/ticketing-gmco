@@ -143,11 +143,6 @@ class PaymentController extends Controller{
 
         $seats = OrderLog::whereTransactionId($order_id)->get();
         foreach ($seats as $seat) {
-            if($seat['confirmation'] != "settlement" && $seat['confirmation'] != "capture"){
-                error_log("pembayaran belum selesai");
-                return Response::HTTP_OK;
-            }
-
             $uniqueKey=strtoupper(substr(sha1(microtime()), rand(0, 5), 6));
             \QrCode::size(300)->format('png')->generate(env('APP_URL')."/seat-info/{$uniqueKey}", "/var/www/storage/app/qr/{$seat['seat_name']}.png");
             Seat::whereName($seat['seat_name'])->update(['link' => $uniqueKey]);
@@ -164,6 +159,7 @@ class PaymentController extends Controller{
         $data['seats'] = \Arr::pluck($seats->toArray(), 'seat_name');
         $data['email_type'] = 3; //3 confirm; 2 notify; 1 ack
         $data['email'] = $buyer['email'];
+
 
         $this->dispatch(new SendMailJob($data));
 
