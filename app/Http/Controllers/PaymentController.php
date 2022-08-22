@@ -56,7 +56,7 @@ class PaymentController extends Controller{
         if(!$seats)return "belum melakukan cim";
 
         //constant declaration
-        $case = 0; $gross_amount=0;
+        $case = false; $gross_amount=0;
         $conflictSeat = array(); $paymentDetails = array(); $purchasedSeat = array();
 
         $buyer = Buyer::updateOrCreate($request->only('email','first_name', 'last_name'), $request->only('phone'));
@@ -70,11 +70,18 @@ class PaymentController extends Controller{
             \DB::beginTransaction();
             $seat = Seat::whereName($seatName)->first();
             if($seat['is_reserved'] !== 9999999999) { //if (telat?) dan yang penting masih kosong : proceed -> //store to log with (2:lucky) //return biasa
-                $case = 2;
+                $case = false;
             }
             else{ //else: simpan sebagai log utk di resolve -> //store to log woth (1:to_late) -> //return pemberitahuan (bisa diakibatkan karena telat lantas keserobot)
-                $case = 1;
+                $case = true;
                 array_push($conflictSeat, $seatName);
+            }
+
+
+            if($case == true){
+                $conflictSeatString = implode(", ", $conflictSeat);
+                \DB::rollBack();
+                return "anda kelamaan dalam proses transaksi, kursi ini telah di beli {$conflictSeatString}, silakan hubungi admin utk refund";
             }
 
             //store to log
@@ -113,11 +120,7 @@ class PaymentController extends Controller{
         $data['conflict'] = $conflictSeat;
         $this->dispatch(new SendMailJob($data));
 
-//        $request->session()->forget('seats');
-        $conflictSeatString = implode(", ", $conflictSeat);
-        if($case == 1) return "anda kelamaan dalam proses transaksi, kursi ini telah di beli {$conflictSeatString}, silakan hubungi admin utk refund";
-//        else return response($paymentDetails, Response::HTTP_CREATED);
-        else return view("pay", ["snap_token" => $snapToken]);
+        return view("pay", ["snap_token" => $snapToken]);
     }
 
     public function callbackHandler(Request $request){

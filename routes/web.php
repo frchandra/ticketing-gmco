@@ -38,8 +38,7 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/logout-admin', [AuthController::class, 'logout']);
 
     Route::get('/resolve', [ResolveController::class, 'index']);
-//    Route::get('/tf_proof/{path}', [ResolveController::class, 'showTf']);
-//    Route::post('/confirm', [ResolveController::class, 'confirmOrder']);
+
 
     Route::get('/sold', [OwnerController::class, 'index']);
 
