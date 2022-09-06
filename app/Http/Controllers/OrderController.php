@@ -31,18 +31,19 @@ class OrderController extends Controller
         return view('reserve', ["seats" => $seats]);
     }
 
-    public function orderIndex(Request $request){ //todo ngeleboke rego kursi ning fe (uis)
+    public function orderIndex(Request $request){
         $seats = $request->session()->get('seats');
+        if(!$seats)return "belum melakukan cim";
         $seats['price'] = array();
         foreach($seats['seat'] as $name) {
             $price = Seat::whereName($name)->value('price');
             array_push($seats['price'], $price);
         }
-        if(!$seats)return "belum melakukan cim";
+
         return view('order', ["seats" => $seats]);
     }
 
-    public function reserveTicket(Request $request){
+    public function reserveTicket(Request $request){//todo ngebatasin jumlah kursi yang bisa diambil
         $request->validate(['seat' => 'required']);
         $seats = $request->only('seat');
         $isHasSeatSession = $request->session()->get('seats');
@@ -53,7 +54,7 @@ class OrderController extends Controller
                 \DB::rollBack();
                 return "seat {$seat} already taken";
             }
-            $affected = Seat::whereName($seat)->update(['is_reserved'=>Carbon::now()->timestamp+60]);//todo : mau berapa lama?
+            $affected = Seat::whereName($seat)->update(['is_reserved'=>Carbon::now()->timestamp+60*5]);//todo : mau berapa lama?
             if($affected < 1)return "cannot found seat {$seat}";
         }
         \DB::commit();
