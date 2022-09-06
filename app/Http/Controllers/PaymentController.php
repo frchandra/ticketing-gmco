@@ -163,8 +163,8 @@ class PaymentController extends Controller{
         $data['email_type'] = 3; //3 confirm; 2 notify; 1 ack
         $data['email'] = $buyer['email'];
 
-
-        $this->dispatch(new SendMailJob($data));
+        if($transaction == "settlement")
+            $this->dispatch(new SendMailJob($data));
 
         return Response::HTTP_OK;
     }
