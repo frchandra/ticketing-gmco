@@ -21,31 +21,27 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
-//Route::get('/token', [OrderController::class, 'showToken']);
 
-Route::get('/reserve', [OrderController::class, 'reserveIndex']);
-Route::post('/reserve', [OrderController::class, 'reserveTicket']);
-Route::get('/order', [OrderController::class, 'orderIndex']);
-Route::post('/order', [PaymentController::class, 'orderTicket']);
-Route::get('/login-admin', [AuthController::class, 'indexLogin']);
-Route::post('/login-admin', [AuthController::class, 'login']);
+
+Route::get('/ticketing/booking', [OrderController::class, 'reserveIndex']);
+Route::post('/ticketing/booking', [OrderController::class, 'reserveTicket']);
+Route::get('/ticketing/order', [OrderController::class, 'orderIndex']);
+Route::post('/ticketing/order', [PaymentController::class, 'orderTicket']);
+Route::get('/admin/login', [AuthController::class, 'indexLogin']);
+Route::post('/admin/login', [AuthController::class, 'login']);
 
 
 
 
 Route::middleware(['auth'])->group(function (){
-    Route::post('/create-admin', [AuthController::class, 'register']);
-    Route::get('/logout-admin', [AuthController::class, 'logout']);
+    Route::post('/admin/create-admin', [AuthController::class, 'register']);
+    Route::get('/admin/logout', [AuthController::class, 'logout']);
+    Route::get('/admin/order-list', [ResolveController::class, 'index']);
+    Route::get('/admin/confirmed-order', [OwnerController::class, 'index']);
 
-    Route::get('/resolve', [ResolveController::class, 'index']);
-
-
-    Route::get('/sold', [OwnerController::class, 'index']);
-
-    Route::get('/owner', [OwnerController::class, 'index']);
-    Route::get('/attend/{unique}', [OwnerController::class, 'indexSetAttend']);
+    Route::get('/authenticate/{unique}', [OwnerController::class, 'indexSetAttend']);
     Route::post('/attend/{unique}', [OwnerController::class, 'setAttend']);
-    Route::post('/not-attend/{name}', [OwnerController::class, 'setNotAttend']);
+    Route::post('/not-attend/{name}', [OwnerController::class, 'setNotAttend']); //todo this should be use param
     Route::post('/get-ticket/{unique}', [OwnerController::class, 'setGetTicket']);
     Route::post('/not-get-ticket/{name}', [OwnerController::class, 'setNotGetTicket']);
 });

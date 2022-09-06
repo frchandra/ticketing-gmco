@@ -77,7 +77,7 @@ class ResolveController extends Controller{
 
         $this->dispatch(new SendMailJob($data));
 //        return response($request->all(), Response::HTTP_CREATED);
-        return redirect('/resolve');
+        return redirect('/admin/pended-order');
     }
 
 

@@ -29,10 +29,11 @@ class OrderController extends Controller{
         \DB::beginTransaction();
         if(Seat::whereName($seatNameInRequest)->value('is_reserved') > Carbon::now()->timestamp){
             \DB::rollBack();
-            return "seat {$seatNameInRequest} already taken";
+            return "seat {$seatNameInRequest} was already taken, please go back and select another seat";
         }
         $affected = Seat::whereName($seatNameInRequest)->update(['is_reserved'=>Carbon::now()->timestamp+60*3]);//todo : mau berapa lama?
-        if($affected < 1)return "cannot found seat {$seatNameInRequest}";
+        if($affected < 1)
+            return "cannot found seat {$seatNameInRequest}, please go back and select another seat";
         \DB::commit();
     }
 
@@ -43,7 +44,9 @@ class OrderController extends Controller{
 
     public function orderIndex(Request $request){ //todo ngeleboke rego kursi ning fe (uis)
         $seats['name'] = $request->session()->get('seatsNameInSession');
-        if(!$seats['name']) { return "belum ngecim";}
+        if(!$seats['name']) {
+            return "belum ngecim";
+        }
         $seats['price'] = array();
         foreach($seats['name'] as $seatsName) {
             $price = Seat::whereName($seatsName)->value('price');
@@ -59,10 +62,10 @@ class OrderController extends Controller{
 
         if($seatsNameInSession == null){
             foreach ($seatsNameInRequest as $seatNameInRequest) {
-                $errorMsg = $this->storeReserveSeat($seatNameInRequest);if($errorMsg != null) return $errorMsg; //should use throwable
+                $errorMsg = $this->storeReserveSeat($seatNameInRequest);if($errorMsg != null) return $errorMsg; //todo should use throwable
             }
             $request->session()->put('seatsNameInSession',  $seatsNameInRequest);
-            return redirect('/order');
+            return redirect('/ticketing/order');
 
         }
         else{
@@ -72,7 +75,7 @@ class OrderController extends Controller{
                 }
             }
             $request->session()->put('seatsNameInSession',  $seatsNameInRequest);
-            return redirect('/order');
+            return redirect('/ticketing/order');
         }
 
     }

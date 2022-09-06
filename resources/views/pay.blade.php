@@ -26,7 +26,7 @@
             window.snap.pay("{{$snap_token}}", {
                 onSuccess: function(result){
                     alert("payment success!"); console.log(result);
-                    location.replace("http://localhost/reserve");
+                    location.replace("http://localhost/ticketing/booking");
                 },
                 onPending: function(result){
 

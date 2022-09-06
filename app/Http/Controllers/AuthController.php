@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-use function redirect;
 use function response;
 use function view;
 
@@ -28,7 +27,7 @@ class AuthController extends Controller{
             ]", Response::HTTP_UNAUTHORIZED);
         }
         $request->session()->regenerate();
-        $request->session()->put('is_gmco', true);
+        $request->session()->put('isAdmin', true);
         return response(['message' => 'success']);
     }
 
