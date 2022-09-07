@@ -9,7 +9,7 @@
 <body>
 
     <h1>Kursi yg Anda pilih</h1>
-    <form action="./ticketing/order" method="post" enctype="multipart/form-data">
+    <form action="/ticketing/order" method="post" enctype="multipart/form-data">
         @csrf
         @foreach($seats['name'] as $seat)
             <h3>{{$seat}}</h3><br>

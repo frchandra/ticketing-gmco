@@ -41,9 +41,10 @@ Route::middleware(['auth'])->group(function (){
 
     Route::get('/authenticate/{unique}', [OwnerController::class, 'indexSetAttend']);
     Route::post('/attend/{unique}', [OwnerController::class, 'setAttend']);
-    Route::post('/not-attend/{name}', [OwnerController::class, 'setNotAttend']); //todo this should be use param
+
+/*    Route::post('/not-attend/{name}', [OwnerController::class, 'setNotAttend']); //todo this should be use param
     Route::post('/get-ticket/{unique}', [OwnerController::class, 'setGetTicket']);
-    Route::post('/not-get-ticket/{name}', [OwnerController::class, 'setNotGetTicket']);
+    Route::post('/not-get-ticket/{name}', [OwnerController::class, 'setNotGetTicket']);*/
 });
 
 Route::middleware(['checkout'])->group(function (){

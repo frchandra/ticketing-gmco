@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buyer;
-use App\Models\OrderLog;
 use App\Models\Seat;
 use App\Models\TicketOwnership;
 use Illuminate\Http\Request;
@@ -23,13 +22,13 @@ class OwnerController extends Controller{
         $seat = Seat::whereLink($unique)->first();
         $data = array();
         $data['warning']="aman";
-        if($seat['attendStatus']==2){
+        if($seat['ticket_status']=="attend"){
             $data['warning']="awas! sudah pernah discan";
         }
-        else if($seat['attendStatus']==1){
+        else if($seat['ticket_status']=="exchanged"){
             $data['warning']="sudah tukar tiket";
         }
-        else if($seat['attendStatus']==0){
+        else if($seat['ticket_status']=="notExchanged"){
             $data['warning']="belum tukar tiket";
         }
         $buyer = TicketOwnership::whereSeatId($seat['seat_id'])->first();
@@ -39,29 +38,28 @@ class OwnerController extends Controller{
         $data['email'] = $buyer['email'];
         $data['seat'] = $seat['name'];
         $data['unique'] = $unique;
-//        return $data;
         return view('seatCheckout', ['data' => $data]);
     }
 
-    public function setAttend($unique){
-        Seat::whereLink($unique)->update(['attendStatus' => 2]);
-        return response($unique, Response::HTTP_CREATED);
-    }
+    public function setAttend(Request $request,$unique){
+        $updateTo  = $request->query('updateTo');
+        if($updateTo == "attend"){
+            Seat::whereLink($unique)->update(['ticket_status' => "attend"]);
+        }
+        else if($updateTo == "exchangedModified"){
+            Seat::whereLink($unique)->update(['ticket_status' => "exchangedModified"]);
+        }
+        else if($updateTo == "exchanged"){
+            Seat::whereLink($unique)->update(['ticket_status' => "exchanged"]);
+        }
+        else if($updateTo == "notExchanged"){
+            Seat::whereLink($unique)->update(['ticket_status' => "notExchanged"]);
+        }
 
-    public function setNotAttend($unique){
-        Seat::whereLink($unique)->update(['attendStatus' => 1]);
         return response($unique, Response::HTTP_OK);
     }
 
-    public function setGetTicket($unique){
-        Seat::whereLink($unique)->update(['attendStatus' => 1]);
-        return response($unique, Response::HTTP_OK);
-    }
 
-    public function setNotGetTicket($unique){
-        Seat::whereLink($unique)->update(['attendStatus' => 0]);
-        return response($unique, Response::HTTP_OK);
-    }
 
     public function seatInfo($unique){
         $seat = Seat::whereLink($unique)->first();
@@ -72,7 +70,6 @@ class OwnerController extends Controller{
         $data['lname'] = $buyer['last_name'];
         $data['email'] = $buyer['email'];
         $data['seat'] = $seat['name'];
-//        return response($unique, Response::HTTP_OK);
         return view('seatInfo', ['data' => $data]);
     }
 

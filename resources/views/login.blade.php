@@ -12,7 +12,7 @@
 
 
 <h1>Hello, world!</h1>
-<form action="./admin/login" method="post">
+<form action="/admin/login" method="post">
         @csrf
         <label><b>Username</b></label>
         <input type="text" placeholder="Enter Username" name="name" required><br>
