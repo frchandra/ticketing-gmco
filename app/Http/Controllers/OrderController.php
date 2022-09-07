@@ -9,6 +9,7 @@ use App\Models\OrderLog;
 use App\Models\Seat;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 use Symfony\Component\HttpFoundation\Response;
 use function array_merge;
@@ -29,11 +30,11 @@ class OrderController extends Controller{
         \DB::beginTransaction();
         if(Seat::whereName($seatNameInRequest)->value('is_reserved') > Carbon::now()->timestamp){
             \DB::rollBack();
-            return "seat {$seatNameInRequest} was already taken, please go back and select another seat";
+            throw  ValidationException::withMessages(['message' => "seat {$seatNameInRequest} was already taken, please go back and select another seat"]);
         }
         $affected = Seat::whereName($seatNameInRequest)->update(['is_reserved'=>Carbon::now()->timestamp+60*3]);//todo : mau berapa lama?
         if($affected < 1)
-            return "cannot found seat {$seatNameInRequest}, please go back and select another seat";
+            throw  ValidationException::withMessages(['message' => "cannot found seat {$seatNameInRequest}"]);
         \DB::commit();
     }
 
@@ -62,21 +63,34 @@ class OrderController extends Controller{
 
         if($seatsNameInSession == null){
             foreach ($seatsNameInRequest as $seatNameInRequest) {
-                $errorMsg = $this->storeReserveSeat($seatNameInRequest);if($errorMsg != null) return $errorMsg; //todo should use throwable
+                try{
+                    $this->storeReserveSeat($seatNameInRequest);
+                }catch (\Exception $e){
+                    return $e->errors()['message'];
+                }
+
+//                $errorMsg = $this->storeReserveSeat($seatNameInRequest);
+//                if($errorMsg != null) return $errorMsg; //todo should use throwable
             }
-            $request->session()->put('seatsNameInSession',  $seatsNameInRequest);
-            return redirect('/ticketing/order');
+//            $request->session()->put('seatsNameInSession',  $seatsNameInRequest);
+//            return redirect('/ticketing/order');
 
         }
         else{
             foreach ($seatsNameInRequest as $seatNameInRequest){
+                /**
+                 * If the seat was not in session (the user have not booked it yet) then check the availability of that seat
+                 */
                 if(in_array($seatNameInRequest, $seatsNameInSession) == false){
-                    $errorMsg = $this->storeReserveSeat($seatNameInRequest);if($errorMsg != null) return $errorMsg;
+                    try{
+                        $this->storeReserveSeat($seatNameInRequest);
+                    }catch (\Exception $e){
+                        return  $e->errors()['message'];
+                    }
                 }
             }
-            $request->session()->put('seatsNameInSession',  $seatsNameInRequest);
-            return redirect('/ticketing/order');
         }
-
+        $request->session()->put('seatsNameInSession',  $seatsNameInRequest);
+        return redirect('/ticketing/order');
     }
 }

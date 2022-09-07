@@ -15,7 +15,7 @@
 
 
 <h1>silakan pilih kursi</h1>
-<form action="./ticketing/booking" method="post">
+<form action="/ticketing/booking" method="post">
     @csrf
     @foreach($seats as $seat)
     <input type="checkbox"  name="seat[]" value={{$seat['name']}}>
