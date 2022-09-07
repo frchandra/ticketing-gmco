@@ -11,6 +11,23 @@ use function response;
 use function view;
 
 class OwnerController extends Controller{
+    /**
+     * helper function to prepare the data about a particular seat
+     */
+    private function setUserData($seat, $unique){
+        $buyer = TicketOwnership::whereSeatId($seat['seat_id'])->first();
+        $buyer = Buyer::whereBuyerId($buyer['buyer_id'])->first();
+        $data['fname'] = $buyer['first_name'];
+        $data['lname'] = $buyer['last_name'];
+        $data['email'] = $buyer['email'];
+        $data['seat'] = $seat['name'];
+        $data['unique'] = $unique;
+        return $data;
+    }
+
+    /**
+     * Showing default page containing sold ticket
+     */
     public function index(){
         $data = TicketOwnership::join('buyers', 'ticket_ownerships.buyer_id', '=','buyers.buyer_id')
                                 ->join('seats', 'ticket_ownerships.seat_id', '=', 'seats.seat_id')
@@ -18,9 +35,18 @@ class OwnerController extends Controller{
         return view('sold', ['orders' => $data]);
     }
 
+    /**
+     *  Displaying the seat data to the admin user
+     *  - attend: the user is attending the event
+     *  - exchanged : the user already exchanged the e-ticket with real ticket but not necessarily attending the event
+     *  - notExchanged : the user hasn't exhcange the e-ticket
+     */
     public function indexSetAttend($unique){
         $seat = Seat::whereLink($unique)->first();
-        $data = array();
+        if(!$seat){
+            return "kursi ini tidak terdaftar pada sistem (tidak memiliki qr-code)";
+        }
+        $data = $this->setUserData($seat, $unique);
         $data['warning']="aman";
         if($seat['ticket_status']=="attend"){
             $data['warning']="awas! sudah pernah discan";
@@ -31,18 +57,11 @@ class OwnerController extends Controller{
         else if($seat['ticket_status']=="notExchanged"){
             $data['warning']="belum tukar tiket";
         }
-        $buyer = TicketOwnership::whereSeatId($seat['seat_id'])->first();
-        $buyer = Buyer::whereBuyerId($buyer['buyer_id'])->first();
-        $data['fname'] = $buyer['first_name'];
-        $data['lname'] = $buyer['last_name'];
-        $data['email'] = $buyer['email'];
-        $data['seat'] = $seat['name'];
-        $data['unique'] = $unique;
         return view('seatCheckout', ['data' => $data]);
     }
 
     public function setAttend(Request $request,$unique){
-        $updateTo  = $request->query('updateTo');
+        $updateTo  = $request->only('updateTicketStatus')['updateTicketStatus'];
         if($updateTo == "attend"){
             Seat::whereLink($unique)->update(['ticket_status' => "attend"]);
         }
@@ -60,16 +79,12 @@ class OwnerController extends Controller{
     }
 
 
-
+    /**
+     * Displaying the seat data to the user
+     */
     public function seatInfo($unique){
         $seat = Seat::whereLink($unique)->first();
-        $buyer = TicketOwnership::whereSeatId($seat['seat_id'])->first();
-        $buyer = Buyer::whereBuyerId($buyer['buyer_id'])->first();
-        $data = array();
-        $data['fname'] = $buyer['first_name'];
-        $data['lname'] = $buyer['last_name'];
-        $data['email'] = $buyer['email'];
-        $data['seat'] = $seat['name'];
+        $data = $this->setUserData($seat, $unique);
         return view('seatInfo', ['data' => $data]);
     }
 

@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         App\Providers\SeatServiceProvider::class,
+        App\Providers\PaymentServiceProvider::class,
 
     ],
 

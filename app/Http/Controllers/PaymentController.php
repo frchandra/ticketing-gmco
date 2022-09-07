@@ -3,110 +3,63 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderTicketRequest;
+use App\Http\Service\PaymentService;
 use App\Jobs\SendMailJob;
 use App\Models\Buyer;
 use App\Models\OrderLog;
 use App\Models\Seat;
 use App\Models\TicketOwnership;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use function array_push;
 use function config;
 use function env;
 use function error_log;
-use function implode;
+
 use function json_decode;
 use function microtime;
 use function rand;
-use function redirect;
 use Symfony\Component\HttpFoundation\Response;
-use function response;
-use function session_cache_expire;
 use function sha1;
 use function strtoupper;
 use function substr;
-use function var_dump;
 use function view;
 
 
 
 class PaymentController extends Controller{
-    public function invokeMidtrans($paymentDetails){
-        $key = config('midtrans.server_key');
-        error_log($key);
-        // Set your Merchant Server Key
-        \Midtrans\Config::$serverKey = $key;
-        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-        \Midtrans\Config::$isProduction = false;
-        // Set sanitization on (default)
-        \Midtrans\Config::$isSanitized = true;
-        // Set 3DS transaction for credit card to true
-        \Midtrans\Config::$is3ds = true;
+    private $paymentService;
 
-        $paymentDetails["gopay"] = ["enable_callback" => true, "callback_url" => "http://127.0.0.1"];
-        $paymentDetails["shopeepay"] = ["callback_url" => "http://127.0.0.1"];
-        $paymentDetails["callbacks"] = ['finish' => "http://127.0.0.1"];
-        $snapToken = \Midtrans\Snap::getSnapToken($paymentDetails);
-
-        return $snapToken;
+    public function __construct(PaymentService $paymentService){
+        $this->paymentService = $paymentService;
     }
 
     public function orderTicket(OrderTicketRequest $request){
         $seats = $request->session()->get('seatsNameInSession');
-        if(!$seats)return "belum melakukan cim";
-
-        //constant declaration
-        $case = false; $gross_amount=0;
-        $conflictSeat = array(); $paymentDetails = array(); $purchasedSeat = array();
-
+        if(!$seats){
+            return "anda belum memilih kursi, silakan memilih kursi terlebih dahulu";
+        }
+        /**
+         * Variable declaration
+         */
+        $paymentDetails = array(); $purchasedSeat = array(); $gross_amount=0;
         $buyer = Buyer::updateOrCreate($request->only('email','first_name', 'last_name'), $request->only('phone'));
 
         $paymentDetails["transaction_details"] = ["order_id"=>Carbon::now()->timestamp, "gross_amount" => $gross_amount];
-        $paymentDetails["customer_details"] = $buyer->toArray();
+        $paymentDetails["customer_details"] = $buyer;
         $paymentDetails["item_details"] = array();
 
 
         foreach ($seats as $seatName) {
-            \DB::beginTransaction();
-            $seat = Seat::whereName($seatName)->first();
-            if($seat['is_reserved'] !== 9999999999) { //if (telat?) dan yang penting masih kosong : proceed -> //store to log with (2:lucky) //return biasa
-                $case = false;
-            }
-            else{ //else: simpan sebagai log utk di resolve -> //store to log woth (1:to_late) -> //return pemberitahuan (bisa diakibatkan karena telat lantas keserobot)
-                $case = true;
-                array_push($conflictSeat, $seatName);
-            }
-
-
-            if($case == true){
-                $conflictSeatString = implode(", ", $conflictSeat);
-                \DB::rollBack();
-                return "anda kelamaan dalam proses transaksi, kursi ini telah di beli {$conflictSeatString}, silakan hubungi admin utk refund";
-            }
-
-            //store to log
-            Seat::whereSeatId($seat['seat_id'])->increment('is_reserved', 15*60);//update the value tambah waktulagi untuk membayar selama 15 menit
-            OrderLog::create([
-                'transaction_id' => $paymentDetails["transaction_details"]["order_id"],
-                'buyer_id' => $buyer->buyer_id,
-                'seat_id' => $seat['seat_id'],
-                'buyer_email' => $request->get('email'),
-                'buyer_phone' => $buyer->phone,
-                'buyer_fname' => $buyer->first_name,
-                'seat_name' => $seat['name'],
-                'price' => $seat['price'],
-                'vendor' => "havent_set",
-                'confirmation' => "havent_set",
-                'case' => $case
-            ]);
-            \DB::commit();
+            $seat = $this->paymentService->createOrder($seatName, $paymentDetails);
             $gross_amount = $gross_amount + $seat['price'];
             $seatDetails = ["name" => $seatName, "price" => $seat['price'], "quantity" => 1, "id"=>$seatName];
             array_push($paymentDetails["item_details"], $seatDetails);
             array_push($purchasedSeat, $seatDetails["name"]);
         }
         $paymentDetails["transaction_details"]["gross_amount"] = $gross_amount;
-        $snapToken = $this->invokeMidtrans($paymentDetails);
+        $snapToken = $this->paymentService ->invokeMidtrans($paymentDetails);
 
         //send email
         $data = array();
@@ -117,7 +70,6 @@ class PaymentController extends Controller{
         //send again to admin
         $data['email_type'] = 2;
         $data['purchased'] = $purchasedSeat;
-        $data['conflict'] = $conflictSeat;
         $this->dispatch(new SendMailJob($data));
 
         return view("pay", ["snap_token" => $snapToken]);

@@ -24,8 +24,7 @@ class CreateOrderLogsTable extends Migration
             $table->unsignedBigInteger('price');
             $table->string('vendor');
             $table->string('confirmation'); //todo change this to enum
-            $table->boolean('case'); // 0=normal; mennyelesaikan transaksi tepatwaktu,luck; menyelesaikan transaksi telat -> terlanjur tf tapi kursi masih kosong
-                                                        // 1=to_late; menyelesaikan transaksi telat-> terlanjur transfer dan gak dapet kursi
+
 
             $table->timestamps();
 
