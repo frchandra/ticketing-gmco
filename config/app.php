@@ -177,6 +177,9 @@ return [
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         App\Providers\SeatServiceProvider::class,
         App\Providers\PaymentServiceProvider::class,
+        App\Providers\EmailServiceProvider::class,
+
+
 
     ],
 

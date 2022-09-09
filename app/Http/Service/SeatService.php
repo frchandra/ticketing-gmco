@@ -3,6 +3,7 @@
 namespace App\Http\Service;
 
 use App\Models\Seat;
+use App\Models\TicketOwnership;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 
@@ -24,6 +25,17 @@ class SeatService{
             \DB::rollBack();
             throw  ValidationException::withMessages(['message' => "seat {$seatNameInReservation} was already taken, please go back and select another seat"]);
         }
+        \DB::commit();
+    }
+
+    public function updateSeatAvailability($seat, $uniqueKey){
+        \DB::transaction();
+        Seat::whereName($seat['seat_name'])->update(['link' => $uniqueKey]);
+        Seat::whereName($seat['seat_name'])->update(['is_reserved'=>9999999999]);
+        TicketOwnership::updateOrCreate([
+            'seat_id' => $seat['seat_id'],
+            'buyer_id' => $seat['buyer_id']
+        ]);
         \DB::commit();
     }
 

@@ -62,9 +62,9 @@ services:
             - "3306:3306"
         environment:
             MYSQL_DATABASE: gmco_db #change me
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_PASSWORD: root
-            MYSQL_USER: chandra
+            MYSQL_ROOT_PASSWORD: root #change me
+            MYSQL_PASSWORD: root #change me
+            MYSQL_USER: chandra #change me
             MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
         volumes:
             - gmco-db:/var/lib/mysql:Z
