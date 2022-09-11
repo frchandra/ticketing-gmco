@@ -29,7 +29,7 @@ class SeatService{
     }
 
     public function updateSeatAvailability($seat, $uniqueKey){
-        \DB::transaction();
+        \DB::beginTransaction();
         Seat::whereName($seat['seat_name'])->update(['link' => $uniqueKey]);
         Seat::whereName($seat['seat_name'])->update(['is_reserved'=>9999999999]);
         TicketOwnership::updateOrCreate([

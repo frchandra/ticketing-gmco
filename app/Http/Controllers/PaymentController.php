@@ -6,11 +6,8 @@ use App\Http\Requests\OrderTicketRequest;
 use App\Http\Service\EmailService;
 use App\Http\Service\PaymentService;
 use App\Http\Service\SeatService;
-use App\Jobs\SendMailJob;
 use App\Models\Buyer;
 use App\Models\OrderLog;
-use App\Models\Seat;
-use App\Models\TicketOwnership;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -64,6 +61,9 @@ class PaymentController extends Controller{
         $paymentDetails["customer_details"] = $buyer;
         $paymentDetails["item_details"] = array();
 
+        /**
+         * Prepare the helper variable
+         */
         foreach ($seats as $seatName) {
             $seat = $this->paymentService->createOrder($seatName, $paymentDetails);
             $gross_amount = $gross_amount + $seat['price'];
@@ -74,18 +74,15 @@ class PaymentController extends Controller{
         $paymentDetails["transaction_details"]["gross_amount"] = $gross_amount;
         $snapToken = $this->paymentService ->invokeMidtrans($paymentDetails);
 
-        //send email to user
-//        $data = array();
-//        $data['email'] = $buyer->email;
-//        $data['email_type'] = 1;
-//        $this->dispatch(new SendMailJob($data));
+        /**
+         * Send Ack email to user
+         */
         $this->emailService->sentAckToUser($buyer);
 
-        //send again to admin
-//        $data['email_type'] = 2;
-//        $data['purchased'] = $purchasedSeat;
-//        $this->dispatch(new SendMailJob($data));
-        $this->emailService->sentNotificationToAdmin($purchasedSeat);
+        /**
+         * Send notification email to the admin
+         */
+        $this->emailService->sentNotificationToAdmin($purchasedSeat, $buyer);
 
         return view("pay", ["snap_token" => $snapToken]);
     }
@@ -99,12 +96,18 @@ class PaymentController extends Controller{
         $type = $notif->payment_type;
         $order_id = $notif->order_id;
 
+        /**
+         * Check response validity from midtrans using algorithm defined on Midtran's docs <- feel free to check this docs
+         */
         $json = json_decode($request->getContent());
         $signature_key = hash('sha512',$json->order_id . $json->status_code . $json->gross_amount . config('midtrans.server_key'));
         if($signature_key != $json->signature_key){
             error_log('invalid signature key at transaction'.$order_id ."signature key :: " . $signature_key . "provided ::  ". $json->signature_key);
             return Response::HTTP_OK;
         }
+        /**
+         * Check seat validity from midtrans response
+         */
         $affected = OrderLog::whereTransactionId($order_id)->update(['confirmation' => $transaction, 'vendor' => $type]);
         if(!$affected){
             error_log('no transaction id found at'.$order_id);
@@ -122,36 +125,13 @@ class PaymentController extends Controller{
             $uniqueKey=strtoupper(substr(sha1(microtime()), rand(0, 5), 6));
             \QrCode::size(300)->format('png')->generate(env('APP_URL')."/seat-info/{$uniqueKey}", "/var/www/storage/app/qr/{$seat['seat_name']}.png");
 
-//            \DB::transaction();
-//            Seat::whereName($seat['seat_name'])->update(['link' => $uniqueKey]);
-//            Seat::whereName($seat['seat_name'])->update(['is_reserved'=>9999999999]);
-//            TicketOwnership::updateOrCreate([
-//                'seat_id' => $seat['seat_id'],
-//                'buyer_id' => $seat['buyer_id']
-//            ]);
-//            \DB::commit();
-
             $this->seatService->updateSeatAvailability($seat, $uniqueKey);
-
-
         }
-
 
         if($transaction == "settlement"){
             $buyer = Buyer::whereBuyerId($seat['buyer_id'])->first(); // whereTransactionId($order_id)->distinct()->get();
-
-//            $data = array();
-//            $data['first_name'] = $buyer['first_name'];
-//            $data['last_name'] = $buyer['last_name'];
-//            $data['seats'] = \Arr::pluck($seats->toArray(), 'seat_name');
-//            $data['email_type'] = 3; //3 confirm; 2 notify; 1 ack
-//            $data['email'] = $buyer['email'];
-//            $this->dispatch(new SendMailJob($data));
-
             $this->emailService->sentConfirmationToUser($buyer, $seats);
         }
-
-
         return Response::HTTP_OK;
     }
 

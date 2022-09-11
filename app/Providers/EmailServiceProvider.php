@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+
 use App\Http\Service\EmailService;
 use Illuminate\Support\ServiceProvider;
 

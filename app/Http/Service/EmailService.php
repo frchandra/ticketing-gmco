@@ -3,9 +3,13 @@
 namespace App\Http\Service;
 
 use App\Jobs\SendMailJob;
+
 use App\Models\Buyer;
 
+
 class EmailService{
+    use \Illuminate\Foundation\Bus\DispatchesJobs;
+
     public function sentAckToUser($buyer){
         $data = array();
         $data['email'] = $buyer->email;
@@ -13,7 +17,8 @@ class EmailService{
         $this->dispatch(new SendMailJob($data));
     }
 
-    public function sentNotificationToAdmin($purchasedSeat){
+    public function sentNotificationToAdmin($purchasedSeat, $buyer){
+        $data['email'] = $buyer->email;
         $data['email_type'] = 2;
         $data['purchased'] = $purchasedSeat;
         $this->dispatch(new SendMailJob($data));

@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
                     'name' => $name,
                     'price' => $price,
                     'link' => '#',
-                    'ticket_status' => "notSold",
+                    'ticket_status' => "notExchanged",
                     'is_reserved' => false
                 ]);
             }
