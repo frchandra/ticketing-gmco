@@ -11,42 +11,67 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|user_email
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
 */
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-
+/**
+ * Ticket booking endpoint
+ * Showing seat list and seats availability
+ * Receiving seat bookig request form user
+ */
 Route::get('/ticketing/booking', [OrderController::class, 'reserveIndex']);
 Route::post('/ticketing/booking', [OrderController::class, 'reserveTicket']);
+
+/**
+ * Ticket order endpoint
+ * Showing the detail (price) from the previous booked seat
+ * Receiving user detail (name, email, phone number) from user request
+ */
 Route::get('/ticketing/order', [OrderController::class, 'orderIndex']);
 Route::post('/ticketing/order', [PaymentController::class, 'orderTicket']);
+
+/**
+ * Handle admin login activity
+ */
 Route::get('/admin/login', [AuthController::class, 'indexLogin']);
 Route::post('/admin/login', [AuthController::class, 'login']);
 
-
-
-
+/*
+ * Only admin can access this endpoint
+ */
 Route::middleware(['auth'])->group(function (){
+    /**
+     * Handle admin register and logout activity
+     */
     Route::post('/admin/create-admin', [AuthController::class, 'register']);
     Route::get('/admin/logout', [AuthController::class, 'logout']);
+    /**
+     * See unresolved ticket transaction form user
+     */
     Route::get('/admin/order-list', [ResolveController::class, 'index']);
+    /**
+     * See the successful transaction from user, see the seat-ticket ownership
+     */
     Route::get('/admin/confirmed-order', [OwnerController::class, 'index']);
-
+    /**
+     * This endpoint is handling qr code scanning for admin user
+     */
     Route::get('/authenticate/{unique}', [OwnerController::class, 'indexSetAttend']);
+    /**
+     * Set the user attendance status
+     * -notExchanged : the user have not exchanged the e-ticket with the physical ticket
+     * -exchangedNotAttend : the user has exchanged the ticket but not/haven't present in the concert
+     * -exchangedModified : the user is present in the concert but intentionally set as not present
+     */
     Route::post('/attend/{unique}', [OwnerController::class, 'setAttend']);
-
-/*    Route::post('/not-attend/{name}', [OwnerController::class, 'setNotAttend']); //todo this should be use param
-    Route::post('/get-ticket/{unique}', [OwnerController::class, 'setGetTicket']);
-    Route::post('/not-get-ticket/{name}', [OwnerController::class, 'setNotGetTicket']);*/
 });
 
+/**
+ * This endpoint is handling qr code scanning for normal user
+ */
 Route::middleware(['checkout'])->group(function (){
     Route::get('/seat-info/{unique}', [OwnerController::class, 'seatInfo']);
 });

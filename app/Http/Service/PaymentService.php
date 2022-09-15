@@ -41,7 +41,7 @@ class PaymentService{
     public function createOrder($seatName, $paymentDetails){
         \DB::beginTransaction();
         $seat = Seat::whereName($seatName)->first();
-        Seat::whereSeatId($seat['seat_id'])->increment('is_reserved', 15*60);//update the value tambah waktulagi untuk membayar selama 15 menit
+        Seat::whereSeatId($seat['seat_id'])->increment('is_reserved', config('constants.TRANSACTION_COMPLETION_DURATION')*60);
         OrderLog::create([
             'transaction_id' => $paymentDetails["transaction_details"]["order_id"],
             'buyer_id' => $paymentDetails["customer_details"]->buyer_id,

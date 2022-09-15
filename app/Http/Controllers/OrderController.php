@@ -48,12 +48,16 @@ class OrderController extends Controller{
 
     /**
      * Handle seat booking request
+     *
+     * Note: for simulating conflict handling between 2 user booking the same seat please use 2 different browser window with different vendor
+     * (i.e. mozilla and chrome). This is because, usually cookies and session is shared within multiple browser's window with the same vendor.
+     * This will be messed up with the code's logic (because it's primarily using session & cookie as part of application logic) and you
+     * may not be getting the result you expected.
      */
     public function reserveTicket(Request $request){
         $request->validate(['seat' => 'required']);
         $seatsNameInRequest = $request->only('seat')['seat'];
         $seatsNameInSession = $request->session()->get('seatsNameInSession');
-
         /**
          * If the user haven't booked any seat yet
          */
@@ -68,7 +72,6 @@ class OrderController extends Controller{
                     return $e->errors()['message'];
                 }
             }
-
         }
         /**
          * If the user have booked one or more seats
@@ -86,7 +89,6 @@ class OrderController extends Controller{
                     }
                 }
             }
-
         }
         $request->session()->put('seatsNameInSession',  $seatsNameInRequest);
         return redirect('/ticketing/order');

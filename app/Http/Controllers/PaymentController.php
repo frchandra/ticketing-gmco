@@ -39,7 +39,7 @@ class PaymentController extends Controller{
     }
 
     /**
-     * Creating order request, issuing midtrans, sent email to user and admin
+     * Creating order request -> issuing midtrans API -> sent email notificaation to user and admin
      */
     public function orderTicket(OrderTicketRequest $request){
         $seats = $request->session()->get('seatsNameInSession');
@@ -87,6 +87,8 @@ class PaymentController extends Controller{
         return view("pay", ["snap_token" => $snapToken]);
     }
 
+
+
     public function callbackHandler(Request $request){
         \Midtrans\Config::$isProduction = false;
         \Midtrans\Config::$serverKey = config('midtrans.server_key');
@@ -97,7 +99,7 @@ class PaymentController extends Controller{
         $order_id = $notif->order_id;
 
         /**
-         * Check response validity from midtrans using algorithm defined on Midtran's docs <- feel free to check this docs
+         * Check response validity from midtran's response using algorithm defined on Midtran's docs <- feel free to check this docs
          */
         $json = json_decode($request->getContent());
         $signature_key = hash('sha512',$json->order_id . $json->status_code . $json->gross_amount . config('midtrans.server_key'));
@@ -128,14 +130,14 @@ class PaymentController extends Controller{
             $this->seatService->updateSeatAvailability($seat, $uniqueKey);
         }
 
+        /**
+         * Transaction status is sent from midtrans API service
+         * see "transaction status" from midtran's docs
+         */
         if($transaction == "settlement"){
-            $buyer = Buyer::whereBuyerId($seat['buyer_id'])->first(); // whereTransactionId($order_id)->distinct()->get();
+            $buyer = Buyer::whereBuyerId($seat['buyer_id'])->first();
             $this->emailService->sentConfirmationToUser($buyer, $seats);
         }
         return Response::HTTP_OK;
     }
-
-
-
-
 }

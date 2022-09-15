@@ -51,7 +51,7 @@ class OwnerController extends Controller{
         if($seat['ticket_status']=="attend"){
             $data['warning']="awas! sudah pernah discan";
         }
-        else if($seat['ticket_status']=="exchanged"){
+        else if($seat['ticket_status']=="exchangedNotAttend"){
             $data['warning']="sudah tukar tiket";
         }
         else if($seat['ticket_status']=="notExchanged"){
@@ -68,8 +68,8 @@ class OwnerController extends Controller{
         else if($updateTo == "exchangedModified"){
             Seat::whereLink($unique)->update(['ticket_status' => "exchangedModified"]);
         }
-        else if($updateTo == "exchanged"){
-            Seat::whereLink($unique)->update(['ticket_status' => "exchanged"]);
+        else if($updateTo == "exchangedNotAttend"){
+            Seat::whereLink($unique)->update(['ticket_status' => "exchangedNotAttend"]);
         }
         else if($updateTo == "notExchanged"){
             Seat::whereLink($unique)->update(['ticket_status' => "notExchanged"]);

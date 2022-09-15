@@ -10,6 +10,9 @@ use function count;
 use function view;
 
 class ResolveController extends Controller{
+    /**
+     * This function is use to showing the transaction log that still on the settlement or capture status
+     */
     public function index(){
         $buyers = OrderLog::select(['transaction_id', 'buyer_email', 'buyer_phone', 'buyer_fname', 'vendor', 'confirmation']) ->distinct()->get();
         foreach ($buyers as $buyer) {

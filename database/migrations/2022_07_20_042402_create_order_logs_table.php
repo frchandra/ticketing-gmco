@@ -23,8 +23,7 @@ class CreateOrderLogsTable extends Migration
             $table->string('seat_name');
             $table->unsignedBigInteger('price');
             $table->string('vendor');
-            $table->string('confirmation'); //todo change this to enum
-
+            $table->string('confirmation');
 
             $table->timestamps();
 
