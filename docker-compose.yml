@@ -1,21 +1,23 @@
 version: '3.7'
-
+# Note any changes on the entry with "change me [n]" must be same with another
+# entry with the same "change me [n]" annotation
 volumes:
-    gmco-code: #change me
+    # this volume used to containing the application code
+    gmco-code: #change me [1]
         driver: local
         driver_opts:
             type: none
             device: /home/chandra/CodeBase/Laravel/gmco/ #change me (needs full path)
             o: bind
-
-    gmco-db: #change me
+    # this volume used to containing database server and application data
+    gmco-db: #change me [2]
         driver: local
         driver_opts:
             type: none
             device: /home/chandra/CodeBase/Laravel/gmco/.docker/dbdata #change me (needs full path)
             o: bind
 
-    gmco-server: #change me
+    gmco-server: #change me [3]
         driver: local
         driver_opts:
             type: none
@@ -27,13 +29,13 @@ services:
         build:
             context: .
             dockerfile: .docker/app.Dockerfile
-        image: 'gmco-app' #change me
-        container_name: 'gmco-app' #change me
+        image: 'gmco-app' #change me [4]
+        container_name: 'gmco-app' #change me [4]
         volumes:
-            - gmco-code:/var/www:Z
+            - gmco-code:/var/www:Z #change me [1]
             - ./.docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini:Z
         networks:
-            - gmco-network #change me
+            - gmco-network #change me [5]
         depends_on:
             - db
 
@@ -46,31 +48,32 @@ services:
         tty: true
         privileged: true
         volumes:
-            - gmco-code:/var/www:z
-            - gmco-server:/etc/nginx/conf.d/:z #change this: ./.docker/nginx/conf.d/default.conf (fastcgi_pass default-laravel-app:9000;)
+            - gmco-code:/var/www:z # change me [1]
+            - gmco-server:/etc/nginx/conf.d/:z #chane me [3]
+        # also change this: ./.docker/nginx/conf.d/default.conf (fastcgi_pass default-laravel-app:9000;) to (fastcgi_pass #change me [4]:9000)
         ports:
             - "80:80"
         networks:
-            - gmco-network #change me
+            - gmco-network #change me [5]
 
 
     db:
         image: 'mariadb:10.5-focal'
-        container_name: gmco-db #change me
+        container_name: gmco-db #change me [2]
         restart: unless-stopped
         ports:
             - "3306:3306"
         environment:
-            MYSQL_DATABASE: gmco_db #change me
+            MYSQL_DATABASE: gmco_db #change me [6]
             MYSQL_ROOT_PASSWORD: root #change me
             MYSQL_PASSWORD: root #change me
             MYSQL_USER: chandra #change me
             MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
         volumes:
-            - gmco-db:/var/lib/mysql:Z
+            - gmco-db:/var/lib/mysql:Z #change me [2]
         networks:
-            - gmco-network #change me
+            - gmco-network #change me [5]
 
 networks:
-    gmco-network: #change me
+    gmco-network: #change me [5]
         driver: bridge

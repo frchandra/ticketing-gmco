@@ -57,11 +57,11 @@ Route::middleware(['auth'])->group(function (){
      */
     Route::get('/admin/confirmed-order', [OwnerController::class, 'index']);
     /**
-     * This endpoint is handling qr code scanning for admin user
+     * This endpoint is handling qr code scanning by admin user
      */
     Route::get('/authenticate/{unique}', [OwnerController::class, 'indexSetAttend']);
     /**
-     * Set the user attendance status
+     * Set the user attendance status (this usually done on d-day open gate or on ticket exchange event)
      * -notExchanged : the user have not exchanged the e-ticket with the physical ticket
      * -exchangedNotAttend : the user has exchanged the ticket but not/haven't present in the concert
      * -exchangedModified : the user is present in the concert but intentionally set as not present
@@ -70,7 +70,7 @@ Route::middleware(['auth'])->group(function (){
 });
 
 /**
- * This endpoint is handling qr code scanning for normal user
+ * This endpoint is handling qr code scanning by normal user
  */
 Route::middleware(['checkout'])->group(function (){
     Route::get('/seat-info/{unique}', [OwnerController::class, 'seatInfo']);

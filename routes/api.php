@@ -19,5 +19,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+/**
+ * handles transaction notification callback from midtrans server
+ */
 Route::post("/midtrans-payment-callback-0", [PaymentController::class, 'callbackHandler']);
-//Route::post("/midtrans-payment-callback-1", [PaymentController::class, 'callbackHandler1']);
+
