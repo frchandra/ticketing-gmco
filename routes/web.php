@@ -20,7 +20,7 @@ Route::get('/', function () {
 /**
  * Ticket booking endpoint
  * Showing seat list and seats availability
- * Receiving seat bookig request form user
+ * Receiving seat booking request form user
  */
 Route::get('/ticketing/booking', [OrderController::class, 'reserveIndex']);
 Route::post('/ticketing/booking', [OrderController::class, 'reserveTicket']);
