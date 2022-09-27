@@ -20,9 +20,9 @@
     @foreach($seats as $seat)
     <input type="checkbox"  name="seat[]" value={{$seat['name']}}>
     <label
-        @if($seat['is_reserved'] === config('constants.MAX_VALUE'))
+        @if($seat['is_reserved'] == "sold/red" /*config('constants.MAX_VALUE')*/)
             style="color:red;"
-        @elseif($seat['is_reserved'] >= \Carbon\Carbon::now()->timestamp)
+        @elseif($seat['is_reserved'] >= "booked/green"/*\Carbon\Carbon::now()->timestamp*/)
             style="color:yellow;"
         @else
             style="color:green;"

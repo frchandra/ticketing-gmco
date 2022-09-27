@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Seat;
 use App\Http\Service\SeatService;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
-use Symfony\Component\HttpFoundation\Response;
+
 
 use function array_push;
+use function config;
+use function count;
 use function in_array;
 use function redirect;
+use function response;
 use function view;
 
 
@@ -26,10 +30,28 @@ class OrderController extends Controller{
     /**
      * Show the available seat on the booking page
      */
-    public function reserveIndex(){
-        $seats = Seat::select(['name', 'is_reserved'])->get();
-        return view('reserve', ["seats" => $seats]);
+    public function reserveIndex(Request $request){
+        $seats = Seat::select(['name', 'is_reserved'])->get()->toArray();
+
+        if(strpos($request->fullUrl(), "/api/v1")){
+            $count = ["count" => count($seats)];
+            foreach ($seats as &$seat) {
+                if($seat['is_reserved']==config('constants.MAX_VALUE')){
+                    $seat['is_reserved'] = 'sold/red';
+                }
+                else if($seat['is_reserved'] > Carbon::now()->timestamp){
+                    $seat['is_reserved'] = 'booked/yellow';
+                }
+                else{
+                    $seat['is_reserved']='available/green';
+                }
+
+            }
+            array_push($seats, $count);
+        }
+        return response()->json($seats, 200);
     }
+
     /**
      * Show the seat order details and order form in order to filled by the user
      */
@@ -43,7 +65,8 @@ class OrderController extends Controller{
             $price = Seat::whereName($seatsName)->value('price');
             array_push($seats['price'], $price);
         }
-        return view('order', ["seats" => $seats]);
+//        return view('order', ["seats" => $seats]);
+        $this->makeResponse($request, $seats, 201, "");
     }
 
     /**
