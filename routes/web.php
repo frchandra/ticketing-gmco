@@ -17,6 +17,13 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+
+Route::get('/token', function () {
+
+        return csrf_token();
+
+});
+
 /**
  * Ticket booking endpoint
  * Showing seat list and seats availability

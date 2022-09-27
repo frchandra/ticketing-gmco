@@ -24,7 +24,12 @@ Route::post('/v1/ticketing/booking', [OrderController::class, 'reserveTicket']);
  * Showing the detail (price) from the previous booked seat
  * Receiving user detail (name, email, phone number) from user request
  */
-Route::get('/ticketing/order', [OrderController::class, 'orderIndex']);
-Route::post('/ticketing/order', [PaymentController::class, 'orderTicket']);
+Route::group(['middleware' => ['web']], function () {
+    Route::get('/v1/ticketing/order', [OrderController::class, 'orderIndex']);
+    Route::post('/v1/ticketing/order', [PaymentController::class, 'orderTicket']);
+});
+
+
+
 
 

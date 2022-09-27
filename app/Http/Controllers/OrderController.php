@@ -45,7 +45,6 @@ class OrderController extends Controller{
                 else{
                     $seat['is_reserved']='available/green';
                 }
-
             }
             array_push($seats, $count);
         }
@@ -56,7 +55,10 @@ class OrderController extends Controller{
      * Show the seat order details and order form in order to filled by the user
      */
     public function orderIndex(Request $request){
+//        return \Cookie::get();
+//        return \Session::get('seatsNameInSession');
         $seats['name'] = $request->session()->get('seatsNameInSession');
+        return response()->json($seats);
         if(!$seats['name']) {
             return "anda belum melakukan pemilihan kursi";
         }
@@ -66,7 +68,8 @@ class OrderController extends Controller{
             array_push($seats['price'], $price);
         }
 //        return view('order', ["seats" => $seats]);
-        $this->makeResponse($request, $seats, 201, "");
+//        $this->makeResponse($request, $seats, 201, "");
+        return response()->json($seats, 201);
     }
 
     /**
@@ -114,6 +117,7 @@ class OrderController extends Controller{
             }
         }
         $request->session()->put('seatsNameInSession',  $seatsNameInRequest);
-        return redirect('/ticketing/order');
+//        \Session::put('seatsNameInSession',  $seatsNameInRequest);
+        return response()->json($seatsNameInRequest, 201);
     }
 }
