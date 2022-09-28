@@ -19,7 +19,17 @@
 
 <form action="/attend/{{$data['unique']}}" method="post">
     @csrf
-    <input type="submit" value="Submit">
+    <input type="radio" name="updateTicketStatus" value="exchangedNotAttend">
+    <label>exchangedNotAttend</label><br>
+    <input type="radio" name="updateTicketStatus" value="attend">
+    <label>attend</label><br>
+    <input type="radio" name="updateTicketStatus" value="notExchanged">
+    <label>notExchanged</label><br><br>
+    <input type="radio" name="updateTicketStatus" value="notExchanged">
+    <label>exchangedModified</label><br><br>
+
+
+    <input type="submit" value="submit" name="updateTo">
 </form>
 
 

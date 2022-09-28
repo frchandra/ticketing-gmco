@@ -1,19 +1,34 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
+/**
+ * handles transaction notification callback from midtrans server
+ */
+Route::post("/v1/midtrans-payment-callback", [PaymentController::class, 'callbackHandler']);
+
+/**
+ * Ticket booking endpoint
+ * Showing seat list and seats availability
+ * Receiving seat booking request form user
+ */
+Route::get('/v1/ticketing/booking', [OrderController::class, 'reserveIndex']);
+Route::post('/v1/ticketing/booking', [OrderController::class, 'reserveTicket']);
+
+/**
+ * Ticket order endpoint
+ * Showing the detail (price) from the previous booked seat
+ * Receiving user detail (name, email, phone number) from user request
+ */
+Route::get('/v1/ticketing/order', [OrderController::class, 'orderIndex']);
+Route::post('/v1/ticketing/order', [PaymentController::class, 'orderTicket']);
+
+
+
+
+
+

@@ -58,7 +58,7 @@
 
                 {{--                    <th>{{$order['is_confirmed']}}</th>--}}
                 <td>{{$order['link']}}</td>
-                <td>{{$order['is_attend']}}</td>
+                <td>{{$order['ticket_status']}}</td>
 
             </tr>
 

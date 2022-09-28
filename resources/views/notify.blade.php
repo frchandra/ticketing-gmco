@@ -4,8 +4,5 @@ ingfo pememsanan kursi  yang pesen ini: {{ $data['email'] }}
 @endforeach
 
 
-    @foreach($data['conflict'] as $seat)
-        <h3>warning conflict</h3>
-        <li>{{ $seat }}</li>
-    @endforeach
+
 

@@ -17,7 +17,6 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');  //todo fixing this wierd bug
             $table->string('password');
-//            $table->rememberToken();
             $table->timestamps();
         });
     }

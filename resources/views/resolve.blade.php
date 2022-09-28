@@ -34,9 +34,10 @@
             <th>first name</th>
             <th>seat</th>
             <th>price</th>
-{{--            <th>is_confirmed</th>--}}
-            <th>proof</th>
-            <th>confirm?</th>
+            <th>transc_id</th>
+            <th>vendor</th>
+
+            <th>confirmation</th>
         </tr>
 
             @foreach($orders as $order)
@@ -46,18 +47,15 @@
                     <td>{{$order['buyer_email']}}</td>
                     <td>{{$order['buyer_phone']}}</td>
                     <td>{{$order['buyer_fname']}}</td>
-                    <td>{{$order['price']}}</td>
-
                     <td>
                         @foreach($order['seats'] as $name)
-                        <p>{{$name}}, <input type="checkbox"  name="seat_name[]" value="{{$name}}"></p>
+                        <p>{{$name}}</p>
                         @endforeach
                     </td>
-
-
-{{--                    <th>{{$order['is_confirmed']}}</th>--}}
-                    <td><a href="./{{$order['tf_proof']}}">proof</a></td>
-                    <td><input name="buyer_id" value="{{$order['buyer_id']}}"hidden><label><b>confirm</b></label><button type="submit">Submit</button></td>
+                    <td>{{$order['price']}}</td>
+                    <td>{{$order['transaction_id']}}</td>
+                    <td>{{$order['vendor']}}</td>
+                    <td>{{$order['confirmation']}}</td>
 
                 </tr>
 
