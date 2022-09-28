@@ -28,7 +28,10 @@ class OrderController extends Controller{
     }
 
     /**
-     * Show the available seat on the booking page
+     * @desc    Show the available seat on the booking page
+     * @param   GET /v1/ticketing/booking
+     * @return  seat availability
+     * @scope   public
      */
     public function reserveIndex(Request $request){
         $seats = Seat::select(['name', 'is_reserved'])->get()->toArray();
@@ -50,30 +53,11 @@ class OrderController extends Controller{
         }
         return response()->json($seats, 200);
     }
-
     /**
-     * Show the seat order details and order form in order to filled by the user
-     */
-    public function orderIndex(Request $request){
-//        return \Cookie::get();
-//        return \Session::get('seatsNameInSession');
-        $seats['name'] = $request->session()->get('seatsNameInSession');
-        return response()->json($seats);
-        if(!$seats['name']) {
-            return "anda belum melakukan pemilihan kursi";
-        }
-        $seats['price'] = array();
-        foreach($seats['name'] as $seatsName) {
-            $price = Seat::whereName($seatsName)->value('price');
-            array_push($seats['price'], $price);
-        }
-//        return view('order', ["seats" => $seats]);
-//        $this->makeResponse($request, $seats, 201, "");
-        return response()->json($seats, 201);
-    }
-
-    /**
-     * Handle seat booking request
+     * @desc    Handle seat booking request
+     * @param   POST /v1/ticketing/booking
+     * @return  the requested seat
+     * @scope   public
      *
      * Note: for simulating conflict handling between 2 user booking the same seat please use 2 different browser window with different vendor
      * (i.e. mozilla and chrome). This is because, usually cookies and session is shared within multiple browser's window with the same vendor.
@@ -117,7 +101,25 @@ class OrderController extends Controller{
             }
         }
         $request->session()->put('seatsNameInSession',  $seatsNameInRequest);
-//        \Session::put('seatsNameInSession',  $seatsNameInRequest);
-        return response()->json($seatsNameInRequest, 201);
+        return response()->json(["status"=>"success", $seatsNameInRequest], 201);
+    }
+
+    /**
+     * @desc    Show the seat order details and order form in order to filled by the user
+     * @param   GET /v1/ticketing/order
+     * @return  seats details
+     * @scope   public that booked the seats
+     */
+    public function orderIndex(Request $request){
+        $seats['name'] = $request->session()->get('seatsNameInSession');
+        if(!$seats['name']) {
+            return "anda belum melakukan pemilihan kursi";
+        }
+        $seats['price'] = array();
+        foreach($seats['name'] as $seatsName) {
+            $price = Seat::whereName($seatsName)->value('price');
+            array_push($seats['price'], $price);
+        }
+        return response()->json($seats, 201);
     }
 }

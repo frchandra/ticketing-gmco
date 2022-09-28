@@ -39,7 +39,10 @@ class PaymentController extends Controller{
     }
 
     /**
-     * Creating order request -> issuing midtrans API -> sent email notificaation to user and admin
+     * @desc    Creating order request then issuing midtrans API then sent email notificaation to user and admin
+     * @param   POST /v1/ticketing/order
+     * @return  snap token
+     * @scope   public that booked the seats
      */
     public function orderTicket(OrderTicketRequest $request){
         $seats = $request->session()->get('seatsNameInSession');
@@ -60,7 +63,6 @@ class PaymentController extends Controller{
         $paymentDetails["transaction_details"] = ["order_id"=>Carbon::now()->timestamp, "gross_amount" => $gross_amount];
         $paymentDetails["customer_details"] = $buyer;
         $paymentDetails["item_details"] = array();
-
         /**
          * Prepare the helper variable
          */
@@ -73,22 +75,24 @@ class PaymentController extends Controller{
         }
         $paymentDetails["transaction_details"]["gross_amount"] = $gross_amount;
         $snapToken = $this->paymentService ->invokeMidtrans($paymentDetails);
-
         /**
          * Send Ack email to user
          */
         $this->emailService->sentAckToUser($buyer);
-
         /**
          * Send notification email to the admin
          */
         $this->emailService->sentNotificationToAdmin($purchasedSeat, $buyer);
 
+        return response()->json($snapToken, 201);
         return view("pay", ["snap_token" => $snapToken]);
+
     }
 
 
-
+    /**
+     *
+     */
     public function callbackHandler(Request $request){
         \Midtrans\Config::$isProduction = false;
         \Midtrans\Config::$serverKey = config('midtrans.server_key');

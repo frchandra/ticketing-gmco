@@ -24,7 +24,7 @@ class SeatService{
         $affected = Seat::whereName($seatNameInReservation)->update(['is_reserved'=>Carbon::now()->timestamp+60*config('constants.FORM_COMPLETION_DURATION')]);
         if($affected < 1){
             \DB::rollBack();
-            throw  ValidationException::withMessages(['message' => "seat {$seatNameInReservation} was already taken, please go back and select another seat"]);
+            throw  ValidationException::withMessages(['message' => "seat {$seatNameInReservation} doesnt exist"]);
         }
         \DB::commit();
     }
