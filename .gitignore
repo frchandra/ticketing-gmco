@@ -16,3 +16,4 @@ yarn-error.log
 /.docker/dbdata
 /storage/app/tf_proof/
 /storage/app/qr/
+/cgi-bin
