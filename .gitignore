@@ -17,3 +17,4 @@ yarn-error.log
 /storage/app/tf_proof/
 /storage/app/qr/
 /cgi-bin
+.htaccess
