@@ -65,8 +65,8 @@ class OrderController extends Controller{
      * may not be getting the result you expected.
      */
     public function reserveTicket(Request $request){
-        $request->validate(['seat' => 'required']);
-        $seatsNameInRequest = $request->only('seat')['seat'];
+        $request->validate(['name' => 'required']);
+        $seatsNameInRequest = $request->only('name')['name'];
         $seatsNameInSession = $request->session()->get('seatsNameInSession');
         /**
          * If the user haven't booked any seat yet
@@ -101,7 +101,7 @@ class OrderController extends Controller{
             }
         }
         $request->session()->put('seatsNameInSession',  $seatsNameInRequest);
-        return response()->json(["status"=>"success", $seatsNameInRequest], 201);
+        return response()->json(["status"=>"success", "seatsName" => $seatsNameInRequest], 201);
     }
 
     /**

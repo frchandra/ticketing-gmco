@@ -20,6 +20,8 @@ use function json_decode;
 use function microtime;
 use function rand;
 use Symfony\Component\HttpFoundation\Response;
+use function rescue;
+use function response;
 use function sha1;
 use function strtoupper;
 use function substr;
@@ -47,7 +49,7 @@ class PaymentController extends Controller{
     public function orderTicket(OrderTicketRequest $request){
         $seats = $request->session()->get('seatsNameInSession');
         if(!$seats){
-            return "anda belum memilih kursi, silakan memilih kursi terlebih dahulu";
+            return response()->json(["message" => "anda belum memilih kursi, silakan memilih kursi terlebih dahulu"], 401);
         }
         /**
          * Helper variable declaration
