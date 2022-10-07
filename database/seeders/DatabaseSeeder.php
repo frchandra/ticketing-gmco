@@ -187,56 +187,56 @@ class DatabaseSeeder extends Seeder
             'price' => 160000,
             'link' => '#',
             'ticket_status' => "notExchanged",
-            'is_reserved' => 9999999999
+            'is_reserved' => config('constants.MAX_VALUE')
         ]);
         Seat::create([
             'name' => 'C2',
             'price' => 160000,
             'link' => '#',
             'ticket_status' => "notExchanged",
-            'is_reserved' => 9999999999
+            'is_reserved' => config('constants.MAX_VALUE')
         ]);
         Seat::create([
             'name' => 'D1',
             'price' => 160000,
             'link' => '#',
             'ticket_status' => "notExchanged",
-            'is_reserved' => 9999999999
+            'is_reserved' => config('constants.MAX_VALUE')
         ]);
         Seat::create([
             'name' => 'D2',
             'price' => 160000,
             'link' => '#',
             'ticket_status' => "notExchanged",
-            'is_reserved' => 9999999999
+            'is_reserved' => config('constants.MAX_VALUE')
         ]);
         Seat::create([
             'name' => 'C29',
             'price' => 160000,
             'link' => '#',
             'ticket_status' => "notExchanged",
-            'is_reserved' => 9999999999
+            'is_reserved' => config('constants.MAX_VALUE')
         ]);
         Seat::create([
             'name' => 'C30',
             'price' => 160000,
             'link' => '#',
             'ticket_status' => "notExchanged",
-            'is_reserved' => 9999999999
+            'is_reserved' => config('constants.MAX_VALUE')
         ]);
         Seat::create([
             'name' => 'D29',
             'price' => 160000,
             'link' => '#',
             'ticket_status' => "notExchanged",
-            'is_reserved' => 9999999999
+            'is_reserved' => config('constants.MAX_VALUE')
         ]);
         Seat::create([
             'name' => 'D30',
             'price' => 160000,
             'link' => '#',
             'ticket_status' => "notExchanged",
-            'is_reserved' => 9999999999
+            'is_reserved' => config('constants.MAX_VALUE')
         ]);
         $temp = array('F', 'G');
         for($i=1; $i<=2; $i++){
@@ -247,7 +247,7 @@ class DatabaseSeeder extends Seeder
                     'price' => 160000,
                     'link' => '#',
                     'ticket_status' => "notExchanged",
-                    'is_reserved' => 9999999999
+                    'is_reserved' => config('constants.MAX_VALUE')
                 ]);
             }
         }
