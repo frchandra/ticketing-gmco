@@ -53,6 +53,7 @@ services:
         # also change this: ./.docker/nginx/conf.d/default.conf (fastcgi_pass default-laravel-app:9000;) to (fastcgi_pass #change me [4]:9000)
         ports:
             - "80:80"
+            - "443:443"
         networks:
             - gmco-network #change me [5]
 
