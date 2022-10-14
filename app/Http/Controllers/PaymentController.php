@@ -11,6 +11,8 @@ use App\Models\OrderLog;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use mysql_xdevapi\Exception;
 use function array_push;
 use function config;
 use function env;
@@ -52,31 +54,18 @@ class PaymentController extends Controller{
             return response()->json(["message" => "anda belum memilih kursi, silakan memilih kursi terlebih dahulu"], 401);
         }
         /**
-         * Helper variable declaration
+         * upsert new user, if the user already bought >5 ticket then return error
          */
-        $paymentDetails = array(); $purchasedSeat = array(); $gross_amount=0;
-        /**
-         * Upsert order request to DB
-         */
-        $buyer = Buyer::updateOrCreate($request->only('email','first_name', 'last_name'), $request->only('phone'));
-        /**
-         * Helper variable declaration
-         */
-        $paymentDetails["transaction_details"] = ["order_id"=>Carbon::now()->timestamp, "gross_amount" => $gross_amount];
-        $paymentDetails["customer_details"] = $buyer;
-        $paymentDetails["item_details"] = array();
-        /**
-         * Prepare the helper variable
-         */
-        foreach ($seats as $seatName) {
-            $seat = $this->paymentService->createOrder($seatName, $paymentDetails);
-            $gross_amount = $gross_amount + $seat['price'];
-            $seatDetails = ["name" => $seatName, "price" => $seat['price'], "quantity" => 1, "id"=>$seatName];
-            array_push($paymentDetails["item_details"], $seatDetails);
-            array_push($purchasedSeat, $seatDetails["name"]);
+        try{
+            $buyer = $this->paymentService->upsertBuyer($request->only('email', 'first_name', 'last_name'), $request->only('phone'), $seats);
+        }catch (ValidationException $e){
+            return response()->json(["status"=>"fail", "message" => $e->errors()['message']], 400);
         }
-        $paymentDetails["transaction_details"]["gross_amount"] = $gross_amount;
-        $snapToken = $this->paymentService ->invokeMidtrans($paymentDetails);
+        /**
+         * Helper variable declaration
+         */
+        $invocationData = $this->paymentService->prepareInvocation($buyer, $seats);
+        $snapToken = $this->paymentService->invokeMidtrans($invocationData["paymentDetails"]);
         /**
          * Send Ack email to user
          */
@@ -84,7 +73,7 @@ class PaymentController extends Controller{
         /**
          * Send notification email to the admin
          */
-        $this->emailService->sentNotificationToAdmin($purchasedSeat, $buyer);
+        $this->emailService->sentNotificationToAdmin($invocationData["purchasedSeats"], $buyer);
 
         return response()->json($snapToken, 201);
         return view("pay", ["snap_token" => $snapToken]);

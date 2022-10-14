@@ -21,4 +21,5 @@ return [
      * from booking the seat. It is recommended to set the constant value according to maximum payment duration on the midtrans gateway
      */
     'TRANSACTION_COMPLETION_DURATION' => 15,  //in minutes
+    'APP_URL' => env('APP_URL', 'http://localhost'),
 ];

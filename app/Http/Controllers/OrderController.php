@@ -68,10 +68,15 @@ class OrderController extends Controller{
         $request->validate(['name' => 'required']);
         $seatsNameInRequest = $request->only('name')['name'];
         $seatsNameInSession = $request->session()->get('seatsNameInSession');
+
+
         /**
          * If the user haven't booked any seat yet
          */
         if($seatsNameInSession == null){
+            if(count($seatsNameInRequest) >= 6){
+                return response()->json(["status"=>"fail", "message" => "pemesanan maksimum 5 kursi"], 400);
+            }
             /**
              * Store the seat booked by the user
              */
