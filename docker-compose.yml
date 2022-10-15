@@ -46,7 +46,7 @@ services:
             MYSQL_USER: chandra #change me
             MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
         volumes:
-            - ./docker/dbdata:/var/lib/mysql:Z #change me [2]
+            - ./.docker/dbdata:/var/lib/mysql:Z #change me [2]
         networks:
             - gmco-network #change me [5]
 
