@@ -68,7 +68,9 @@ class OrderController extends Controller{
         $request->validate(['name' => 'required']);
         $seatsNameInRequest = $request->only('name')['name'];
         $seatsNameInSession = $request->session()->get('seatsNameInSession');
-
+        
+        // Seat::where("name", "=", "A14")->update(['is_reserved'=>Carbon::now()->timestamp+60*10]);
+        // return "bug";
 
         /**
          * If the user haven't booked any seat yet
