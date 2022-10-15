@@ -106,11 +106,11 @@ class PaymentController extends Controller{
         /**
          * Check seat validity from midtrans response
          */
-        $affected = OrderLog::whereTransactionId($order_id)->update(['confirmation' => $transaction, 'vendor' => $type]);
-        if(!$affected){
-            error_log('no transaction id found at'.$order_id);
-            return Response::HTTP_OK;
-        }
+        /*$affected = */OrderLog::whereTransactionId($order_id)->update(['confirmation' => $transaction, 'vendor' => $type]);
+//        if(!$affected){
+//            error_log('no transaction id found at'.$order_id);
+//            return Response::HTTP_OK;
+//        }
 
         /**
          * Update seat availability information for each seat the user pay
