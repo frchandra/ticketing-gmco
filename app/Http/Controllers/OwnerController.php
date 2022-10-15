@@ -15,6 +15,9 @@ class OwnerController extends Controller{
      * helper function to prepare the data about a particular seat
      */
     private function setUserData($seat, $unique){
+        
+        
+        
         $buyer = TicketOwnership::whereSeatId($seat['seat_id'])->first();
         $buyer = Buyer::whereBuyerId($buyer['buyer_id'])->first();
         $data['fname'] = $buyer['first_name'];
@@ -83,7 +86,13 @@ class OwnerController extends Controller{
      * Displaying the seat data to the user
      */
     public function seatInfo($unique){
+
+        
         $seat = Seat::whereLink($unique)->first();
+        
+        if(!$seat){
+            return response()->json(["status"=>"fail", "message"=>"maaf, kursi dengan kode unik ini tidak ada"], 400);
+        }
         $data = $this->setUserData($seat, $unique);
         return view('seatInfo', ['data' => $data]);
     }

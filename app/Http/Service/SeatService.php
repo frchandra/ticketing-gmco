@@ -17,11 +17,11 @@ class SeatService{
      */
     public function storeSeatReservation($seatNameInReservation){
         \DB::beginTransaction();
-        if(Seat::whereName($seatNameInReservation)->value('is_reserved') > Carbon::now()->timestamp){
+        if(Seat::where("name", "=", $seatNameInReservation)->value('is_reserved') > Carbon::now()->timestamp){
             \DB::rollBack();
             throw  ValidationException::withMessages(['message' => "seat {$seatNameInReservation} was already taken, please go back and select another seat"]);
         }
-        $affected = Seat::whereName($seatNameInReservation)->update(['is_reserved'=>Carbon::now()->timestamp+60*config('constants.FORM_COMPLETION_DURATION')]);
+        $affected = Seat::where("name", "=", $seatNameInReservation)->update(['is_reserved'=>Carbon::now()->timestamp+60*10]);
         if($affected < 1){
             \DB::rollBack();
             throw  ValidationException::withMessages(['message' => "seat {$seatNameInReservation} doesnt exist"]);

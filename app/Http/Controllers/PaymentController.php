@@ -106,25 +106,27 @@ class PaymentController extends Controller{
         /**
          * Check seat validity from midtrans response
          */
-        /*$affected = */OrderLog::whereTransactionId($order_id)->update(['confirmation' => $transaction, 'vendor' => $type]);
-//        if(!$affected){
-//            error_log('no transaction id found at'.$order_id);
-//            return Response::HTTP_OK;
-//        }
+        $affected = OrderLog::whereTransactionId($order_id)->update(['confirmation' => $transaction, 'vendor' => $type]);
+        if(!$affected){
+            error_log('no transaction id found at'.$order_id);
+            return Response::HTTP_OK;
+        }
 
         /**
          * Update seat availability information for each seat the user pay
          */
-        $seats = OrderLog::whereTransactionId($order_id)->get();
+        $seats = OrderLog::where("transaction_id", "=", $order_id)->get();
         foreach ($seats as $seat) {
             /**
              * Create QR code for each seat
              */
             $uniqueKey=strtoupper(substr(sha1(microtime()), rand(0, 5), 6));
-            \QrCode::size(300)->format('png')->generate(env('APP_URL')."/seat-info/{$uniqueKey}", "/var/www/storage/app/qr/{$seat['seat_name']}.png");
+            \QrCode::size(300)->format('png')->generate(env('APP_URL')."/seat-info/{$uniqueKey}", "/home/u1545269/public_html/api.gmco-event.com/storage/app/qr/{$seat['seat_name']}.png");
 
             $this->seatService->updateSeatAvailability($seat, $uniqueKey);
         }
+        $buyer = Buyer::whereBuyerId($seat['buyer_id'])->first();
+        $this->emailService->sentConfirmationToUser($buyer, $seats);
 
         /**
          * Transaction status is sent from midtrans API service
