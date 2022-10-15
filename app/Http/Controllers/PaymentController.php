@@ -53,6 +53,8 @@ class PaymentController extends Controller{
         if(!$seats){
             return response()->json(["message" => "anda belum memilih kursi, silakan memilih kursi terlebih dahulu"], 400);
         }
+        //todo: rate limit
+
         /**
          * upsert new user, if the user already bought >5 ticket then return error
          */

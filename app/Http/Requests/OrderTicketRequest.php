@@ -21,12 +21,13 @@ class OrderTicketRequest extends FormRequest
      *
      * @return array
      */
+    //todo: validate nomor telp
     public function rules(){
         return [
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'required|email',
-            'phone' => 'required|numeric',
+            'phone' => 'required|numeric|min:10',
         ];
     }
 }

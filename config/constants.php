@@ -7,7 +7,7 @@ return [
      * "sold/status" cannot be bought or booked by other users.
      * This value will be stored on the is_reserve field on the seat
      */
-    'MAX_VALUE' => 1900000000,
+    'MAX_VALUE' => 1690000000,
     /**
      * form_completion_duration is used to indicate the seat status as "booked/yellow"
      * This status will prevent the seat from being booked by two (or more) users.
