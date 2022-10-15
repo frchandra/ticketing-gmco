@@ -51,7 +51,7 @@ class PaymentController extends Controller{
     public function orderTicket(OrderTicketRequest $request){
         $seats = $request->session()->get('seatsNameInSession');
         if(!$seats){
-            return response()->json(["message" => "anda belum memilih kursi, silakan memilih kursi terlebih dahulu"], 401);
+            return response()->json(["message" => "anda belum memilih kursi, silakan memilih kursi terlebih dahulu"], 400);
         }
         /**
          * upsert new user, if the user already bought >5 ticket then return error
@@ -75,9 +75,8 @@ class PaymentController extends Controller{
          */
         $this->emailService->sentNotificationToAdmin($invocationData["purchasedSeats"], $buyer);
 
-        return response()->json($snapToken, 201);
-//        return view("pay", ["snap_token" => $snapToken]);
 
+        return response()->json(["status"=>"success", "token" => $snapToken], 201);
     }
 
 
