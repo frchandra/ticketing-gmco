@@ -76,7 +76,7 @@ class PaymentController extends Controller{
         $this->emailService->sentNotificationToAdmin($invocationData["purchasedSeats"], $buyer);
 
         return response()->json($snapToken, 201);
-        return view("pay", ["snap_token" => $snapToken]);
+//        return view("pay", ["snap_token" => $snapToken]);
 
     }
 

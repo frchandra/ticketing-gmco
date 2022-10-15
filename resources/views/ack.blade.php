@@ -1,1 +1,1 @@
-thank you for buying our ticket, please wait for further information from us
+thank you for your purchase. Your request in currently on process, please wait for further information from us.
