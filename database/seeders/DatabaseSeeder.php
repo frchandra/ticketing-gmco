@@ -89,7 +89,7 @@ class DatabaseSeeder extends Seeder
         for($i=10; $i<=15; $i++){
             Seat::create([
                 'name' => "M{$i}",
-                'price' => 16000,
+                'price' => 160000,
                 'link' => '#',
                 'ticket_status' => "notExchanged",
                 'is_reserved' => 0
