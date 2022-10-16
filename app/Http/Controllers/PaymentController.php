@@ -51,7 +51,7 @@ class PaymentController extends Controller{
     public function orderTicket(OrderTicketRequest $request){
         $seats = $request->session()->get('seatsNameInSession');
         if(!$seats){
-            return response()->json(["message" => "anda belum memilih kursi, silakan memilih kursi terlebih dahulu"], 400);
+            return response()->json(["message" => "anda belum memilih kursi, silakan memilih kursi terlebih dahulu"], 201);
         }
         //todo: rate limit
 
@@ -61,7 +61,7 @@ class PaymentController extends Controller{
         try{
             $buyer = $this->paymentService->upsertBuyer($request->only('email', 'first_name', 'last_name'), $request->only('phone'), $seats);
         }catch (ValidationException $e){
-            return response()->json(["status"=>"fail", "message" => $e->errors()['message']], 400);
+            return response()->json(["status"=>"fail", "message" => $e->errors()['message']], 201);
         }
         /**
          * Helper variable declaration

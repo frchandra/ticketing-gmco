@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
                 $name = "{$temp[$i-1]}{$j}";
                 Seat::create([
                     'name' => $name,
-                    'price' => 160000,
+                    'price' => 165000,
                     'link' => '#',
                     'ticket_status' => "notExchanged",
                     'is_reserved' => 0
@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
                 $name = "{$temp[$i-1]}{$j}";
                 Seat::create([
                     'name' => $name,
-                    'price' => 160000,
+                    'price' => 165000,
                     'link' => '#',
                     'ticket_status' => "notExchanged",
                     'is_reserved' => 0
@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder
                 $name = "{$temp[$i-1]}{$j}";
                 Seat::create([
                     'name' => $name,
-                    'price' => 140000,
+                    'price' => 145000,
                     'link' => '#',
                     'ticket_status' => "notExchanged",
                     'is_reserved' => 0
@@ -76,7 +76,7 @@ class DatabaseSeeder extends Seeder
                 $name = "{$temp[$i-1]}{$j}";
                 Seat::create([
                     'name' => $name,
-                    'price' => 140000,
+                    'price' => 145000,
                     'link' => '#',
                     'ticket_status' => "notExchanged",
                     'is_reserved' => 0
@@ -89,7 +89,7 @@ class DatabaseSeeder extends Seeder
         for($i=10; $i<=15; $i++){
             Seat::create([
                 'name' => "M{$i}",
-                'price' => 160000,
+                'price' => 165000,
                 'link' => '#',
                 'ticket_status' => "notExchanged",
                 'is_reserved' => 0
@@ -107,7 +107,7 @@ class DatabaseSeeder extends Seeder
                 $name = "{$temp[$i-1]}{$j}";
                 Seat::create([
                     'name' => $name,
-                    'price' => 140000,
+                    'price' => 145000,
                     'link' => '#',
                     'ticket_status' => "notExchanged",
                     'is_reserved' => 0
@@ -123,7 +123,7 @@ class DatabaseSeeder extends Seeder
                 $name = "{$temp[$i-1]}{$j}";
                 Seat::create([
                     'name' => $name,
-                    'price' => 140000,
+                    'price' => 145000,
                     'link' => '#',
                     'ticket_status' => "notExchanged",
                     'is_reserved' => 0
@@ -136,7 +136,7 @@ class DatabaseSeeder extends Seeder
         for($i=1; $i<=15; $i++){
             Seat::create([
                 'name' => "O{$i}",
-                'price' => 140000,
+                'price' => 145000,
                 'link' => '#',
                 'ticket_status' => "notExchanged",
                 'is_reserved' => 0
@@ -145,7 +145,7 @@ class DatabaseSeeder extends Seeder
         for($i=23; $i<=30; $i++){
             Seat::create([
                 'name' => "O{$i}",
-                'price' => 140000,
+                'price' => 145000,
                 'link' => '#',
                 'ticket_status' => "notExchanged",
                 'is_reserved' => 0
@@ -153,7 +153,7 @@ class DatabaseSeeder extends Seeder
         }
         Seat::create([
             'name' => 'A8',
-            'price' => 140000,
+            'price' => 145000,
             'link' => '#',
             'ticket_status' => "notExchanged",
             'is_reserved' => 0
@@ -167,14 +167,14 @@ class DatabaseSeeder extends Seeder
         ]);
         Seat::create([
             'name' => 'A22',
-            'price' => 140000,
+            'price' => 145000,
             'link' => '#',
             'ticket_status' => "notExchanged",
             'is_reserved' => 0
         ]);
         Seat::create([
             'name' => 'A23',
-            'price' => 140000,
+            'price' => 145000,
             'link' => '#',
             'ticket_status' => "notExchanged",
             'is_reserved' => 0
@@ -184,14 +184,14 @@ class DatabaseSeeder extends Seeder
          * */
         Seat::create([
             'name' => 'C1',
-            'price' => 160000,
+            'price' => 165000,
             'link' => '#',
             'ticket_status' => "notExchanged",
             'is_reserved' => config('constants.MAX_VALUE')
         ]);
         Seat::create([
             'name' => 'C2',
-            'price' => 160000,
+            'price' => 165000,
             'link' => '#',
             'ticket_status' => "notExchanged",
             'is_reserved' => config('constants.MAX_VALUE')
@@ -205,35 +205,35 @@ class DatabaseSeeder extends Seeder
         ]);
         Seat::create([
             'name' => 'D2',
-            'price' => 160000,
+            'price' => 165000,
             'link' => '#',
             'ticket_status' => "notExchanged",
             'is_reserved' => config('constants.MAX_VALUE')
         ]);
         Seat::create([
             'name' => 'C29',
-            'price' => 160000,
+            'price' => 165000,
             'link' => '#',
             'ticket_status' => "notExchanged",
             'is_reserved' => config('constants.MAX_VALUE')
         ]);
         Seat::create([
             'name' => 'C30',
-            'price' => 160000,
+            'price' => 165000,
             'link' => '#',
             'ticket_status' => "notExchanged",
             'is_reserved' => config('constants.MAX_VALUE')
         ]);
         Seat::create([
             'name' => 'D29',
-            'price' => 160000,
+            'price' => 165000,
             'link' => '#',
             'ticket_status' => "notExchanged",
             'is_reserved' => config('constants.MAX_VALUE')
         ]);
         Seat::create([
             'name' => 'D30',
-            'price' => 160000,
+            'price' => 165000,
             'link' => '#',
             'ticket_status' => "notExchanged",
             'is_reserved' => config('constants.MAX_VALUE')
@@ -244,7 +244,7 @@ class DatabaseSeeder extends Seeder
                 $name = "{$temp[$i-1]}{$j}";
                 Seat::create([
                     'name' => $name,
-                    'price' => 160000,
+                    'price' => 165000,
                     'link' => '#',
                     'ticket_status' => "notExchanged",
                     'is_reserved' => config('constants.MAX_VALUE')
