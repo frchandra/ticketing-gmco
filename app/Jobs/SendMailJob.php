@@ -41,7 +41,7 @@ class SendMailJob implements ShouldQueue
         }
         if($this->data['email_type'] == 2){
             $notifMail = new NotifMail($this->data);
-            Mail::to('nismara.chandra@gmail.com')->send($notifMail);
+            Mail::to('gmcolive@gmail.com')->send($notifMail);
         }
         if($this->data['email_type'] == 1){
             $ackMail = new AckMail($this->data);
