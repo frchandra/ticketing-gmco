@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/static/css/main.5072cb4e.css",
+    "main.js": "/static/js/main.f885d6cb.js",
+    "static/media/herotemp.jpg": "/static/media/herotemp.a6ce32b02a392a6458e8.jpg",
+    "static/media/Logo-FIX.png": "/static/media/Logo-FIX.1e996efa6d630afe6c43.png",
+    "static/media/seatprice.webp": "/static/media/seatprice.aef4f1b57b3c2ec601f6.webp",
+    "static/media/TCim.webp": "/static/media/TCim.9059477c32282b8503c2.webp",
+    "static/media/logo_gmco.webp": "/static/media/logo_gmco.75b1f19d7e26539d26d6.webp",
+    "static/media/solidcolorgreen.png": "/static/media/solidcolorgreen.7b4fb0679d58d50a0f4f.png",
+    "static/media/harga-logo.svg": "/static/media/harga-logo.fccf033e7379b99199600f28df687b05.svg",
+    "static/media/ticket.webp": "/static/media/ticket.7f3c123f53fa84c4fbfe.webp",
+    "static/media/herov1.webp": "/static/media/herov1.fb4a2eaa30d4043b5810.webp",
+    "index.html": "/index.html",
+    "main.5072cb4e.css.map": "/static/css/main.5072cb4e.css.map",
+    "main.f885d6cb.js.map": "/static/js/main.f885d6cb.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5072cb4e.css",
+    "static/js/main.f885d6cb.js"
+  ]
+}

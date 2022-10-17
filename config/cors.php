@@ -17,9 +17,9 @@ return [
 
     'paths' => ['*'],
     'allowed_methods' => ['*'],
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['https://gmco-event.com'],
     'allowed_origins_patterns' => [],
-    'allowed_headers' => ['X-Custom-Header', 'Upgrade-Insecure-Requests', '*'],
+    'allowed_headers' => ['X-Custom-Header', 'Upgrade-Insecure-Requests', 'X-HTTP-Method-Override', 'Content-Type', 'Accept', '*'],
     'exposed_headers' => [],
     'max_age' => 0,
     'supports_credentials' => true,
