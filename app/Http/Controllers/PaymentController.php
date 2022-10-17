@@ -53,8 +53,7 @@ class PaymentController extends Controller{
         if(!$seats){
             return response()->json(["message" => "anda belum memilih kursi, silakan memilih kursi terlebih dahulu"], 201);
         }
-        //todo: rate limit
-
+        //todo(done): rate limit
         /**
          * upsert new user, if the user already bought >5 ticket then return error
          */
@@ -64,7 +63,7 @@ class PaymentController extends Controller{
             return response()->json(["status"=>"fail", "message" => $e->errors()['message']], 201);
         }
         /**
-         * Helper variable declaration
+         * Helper variable declaration, prepare invocation and update the order logs data
          */
         $invocationData = $this->paymentService->prepareInvocation($buyer, $seats);
         $snapToken = $this->paymentService->invokeMidtrans($invocationData["paymentDetails"]);

@@ -18,6 +18,8 @@ class EmailService{
     }
 
     public function sentNotificationToAdmin($purchasedSeat, $buyer){
+        $data['first_name'] = $buyer->first_name;
+        $data['last_name']  = $buyer->last_name;
         $data['email'] = $buyer->email;
         $data['email_type'] = 2;
         $data['purchased'] = $purchasedSeat;

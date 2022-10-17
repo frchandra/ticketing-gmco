@@ -40,8 +40,9 @@ return [
             'port' => env('MAIL_PORT', 587),
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME'),
-            'password' => env('`MAIL_PASSWORD'),
+            'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
+<<<<<<< HEAD
 //            'auth_mode' => null,
             'stream' => [
                 'ssl' => [
@@ -50,6 +51,9 @@ return [
                     'verify_peer_name' => true,
                 ],
             ],
+=======
+            'local_domain' => env('MAIL_EHLO_DOMAIN'),
+>>>>>>> upgrade
         ],
 
         'ses' => [
@@ -66,7 +70,7 @@ return [
 
         'sendmail' => [
             'transport' => 'sendmail',
-            'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -t -i'),
+            'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
         ],
 
         'log' => [

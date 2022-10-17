@@ -18,3 +18,4 @@ yarn-error.log
 /storage/app/qr/
 /cgi-bin
 .htaccess
+public/error_log
