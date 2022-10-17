@@ -1,22 +1,32 @@
 {
   "files": {
-    "main.css": "/static/css/main.5072cb4e.css",
-    "main.js": "/static/js/main.f885d6cb.js",
-    "static/media/herotemp.jpg": "/static/media/herotemp.a6ce32b02a392a6458e8.jpg",
-    "static/media/Logo-FIX.png": "/static/media/Logo-FIX.1e996efa6d630afe6c43.png",
+    "main.css": "/static/css/main.08ca2165.css",
+    "main.js": "/static/js/main.25cac66f.js",
+    "static/media/tatacara2.webp": "/static/media/tatacara2.ba27a772511005e008a3.webp",
     "static/media/seatprice.webp": "/static/media/seatprice.aef4f1b57b3c2ec601f6.webp",
     "static/media/TCim.webp": "/static/media/TCim.9059477c32282b8503c2.webp",
+    "static/media/tatacara7.webp": "/static/media/tatacara7.e2be9cea1488f0199387.webp",
+    "static/media/Logo-FIX.webp": "/static/media/Logo-FIX.5842d891971af89df1eb.webp",
+    "static/media/tatacara3.webp": "/static/media/tatacara3.307892d0df2f1451720b.webp",
     "static/media/logo_gmco.webp": "/static/media/logo_gmco.75b1f19d7e26539d26d6.webp",
-    "static/media/solidcolorgreen.png": "/static/media/solidcolorgreen.7b4fb0679d58d50a0f4f.png",
+    "static/media/tatacara5.webp": "/static/media/tatacara5.e7b368038d662dd5e6d3.webp",
+    "static/media/tatacara6.webp": "/static/media/tatacara6.2516318dd3db9f4d8a31.webp",
+    "static/media/tatacara4.webp": "/static/media/tatacara4.b399264bd37714e00326.webp",
+    "static/media/tatacara1.webp": "/static/media/tatacara1.d5cfbe1e0db1203cbbe5.webp",
     "static/media/harga-logo.svg": "/static/media/harga-logo.fccf033e7379b99199600f28df687b05.svg",
     "static/media/ticket.webp": "/static/media/ticket.7f3c123f53fa84c4fbfe.webp",
     "static/media/herov1.webp": "/static/media/herov1.fb4a2eaa30d4043b5810.webp",
+    "static/media/solidcolorgreen.webp": "/static/media/solidcolorgreen.f22558b51011c7769ffa.webp",
+    "static/media/slick.svg": "/static/media/slick.2630a3e3eab21c607e21.svg",
+    "static/media/slick.eot": "/static/media/slick.a4e97f5a2a64f0ab1323.eot",
+    "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
+    "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
-    "main.5072cb4e.css.map": "/static/css/main.5072cb4e.css.map",
-    "main.f885d6cb.js.map": "/static/js/main.f885d6cb.js.map"
+    "main.08ca2165.css.map": "/static/css/main.08ca2165.css.map",
+    "main.25cac66f.js.map": "/static/js/main.25cac66f.js.map"
   },
   "entrypoints": [
-    "static/css/main.5072cb4e.css",
-    "static/js/main.f885d6cb.js"
+    "static/css/main.08ca2165.css",
+    "static/js/main.25cac66f.js"
   ]
 }
