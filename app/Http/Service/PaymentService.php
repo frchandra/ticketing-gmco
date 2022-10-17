@@ -64,9 +64,9 @@ class PaymentService{
 
     public function upsertBuyer($userData, $userPhone, $seats){
         /**
-         * get the seat that was purchased by this user
+         * get the seat that was purchased by this user, prevent the same user from buying more than n ticket
          */
-        $buyerPreviousSeats = OrderLog::whereBuyerEmail($userData['email'])->get();
+        $buyerPreviousSeats = OrderLog::select('seat_name')->whereBuyerEmail($userData['email'])->get()->toArray();
         if(count($buyerPreviousSeats)+count($seats)<=5){
             /**
              * Upsert order request to DB
@@ -76,6 +76,18 @@ class PaymentService{
         else{
             throw ValidationException::withMessages(["message" => "Jumlah pembelian tiket maksimal per orang adalah 5. Sudah " . count($buyerPreviousSeats) . " tiket/kursi yang terasosiasi dengan email ini. Silakan ulang pemesan menggunakan email yang berbeda"]);
         }
+        /**
+         * prevent the user from buying a seat/ticket that was sold (the confirmation status is settlement)
+         */
+        foreach ($seats as $seat){
+            $isSeatSold = OrderLog::select('seat_name')->whereSeatName($seat)->where(function ($query) {
+                $query->where("confirmation", "=", "settlement")->orWhere("confirmation", "=", "pending");
+            })->first();
+            if($isSeatSold){
+                throw ValidationException::withMessages(["message" => "Maaf, kursi ini: {$isSeatSold['seat_name']} telah terbeli, silakan kembali ke halaman utama lalu memilih kursi lain"]);
+            }
+        }
+
         return $buyer;
     }
 
