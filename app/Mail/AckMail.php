@@ -28,6 +28,6 @@ class AckMail extends Mailable
      * @return $this
      */
     public function build(){
-        return $this->subject("ticketing ack")->view('ack');
+        return $this->subject("PAYMENT ON PROCESS - GMCO LIVE")->view('ack');
     }
 }

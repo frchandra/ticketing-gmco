@@ -28,6 +28,6 @@ class ConfirmMail extends Mailable
      * @return $this
      */
     public function build(){
-        return $this->subject("ticketing")->view('confirm', ['data' => $this->data]);
+        return $this->subject("THANKS FOR PURCHASING! - GMCO LIVE")->view('confirm', ['data' => $this->data]);
     }
 }
