@@ -40,7 +40,7 @@
         .image {
             height: 250px;
             width: 250px;
-            background-image: url('./images/Logo-FIX.png');
+            background-image: url('https://gmco-event.com/images/Logo-FIX.png');
             background-size: contain;
             opacity: 0.85;
         }

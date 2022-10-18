@@ -24,7 +24,7 @@ class PaymentService{
         /**
          * Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
          */
-        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$isProduction = true;
         /**
          * Set sanitization on (default)
          */
@@ -35,7 +35,6 @@ class PaymentService{
         \Midtrans\Config::$is3ds = true;
         //todo(done): update url to env
         $paymentDetails["gopay"] = ["enable_callback" => true, "callback_url" => config('constants.APP_URL')];
-        $paymentDetails["shopeepay"] = ["callback_url" => config('constants.APP_URL')];
         $paymentDetails["callbacks"] = ['finish' => config('constants.APP_URL')];
         $snapToken = \Midtrans\Snap::getSnapToken($paymentDetails);
 

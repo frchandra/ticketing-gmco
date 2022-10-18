@@ -85,8 +85,8 @@ class PaymentController extends Controller{
      *
      */
     public function callbackHandler(Request $request){
-        \Midtrans\Config::$isProduction = false;
-        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        \Midtrans\Config::$isProduction = true;
+        \Midtrans\Config::$serverKey = "Mid-server-nc65gz2NYVx7OPINLv-xcCgq";
         $notif = new \Midtrans\Notification();
 
         $transaction = $notif->transaction_status;

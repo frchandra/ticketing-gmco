@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.08ca2165.css",
-    "main.js": "/static/js/main.25cac66f.js",
+    "main.css": "/static/css/main.c58789e3.css",
+    "main.js": "/static/js/main.0e2fec64.js",
     "static/media/tatacara2.webp": "/static/media/tatacara2.ba27a772511005e008a3.webp",
     "static/media/seatprice.webp": "/static/media/seatprice.aef4f1b57b3c2ec601f6.webp",
     "static/media/TCim.webp": "/static/media/TCim.9059477c32282b8503c2.webp",
@@ -22,11 +22,11 @@
     "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
-    "main.08ca2165.css.map": "/static/css/main.08ca2165.css.map",
-    "main.25cac66f.js.map": "/static/js/main.25cac66f.js.map"
+    "main.c58789e3.css.map": "/static/css/main.c58789e3.css.map",
+    "main.0e2fec64.js.map": "/static/js/main.0e2fec64.js.map"
   },
   "entrypoints": [
-    "static/css/main.08ca2165.css",
-    "static/js/main.25cac66f.js"
+    "static/css/main.c58789e3.css",
+    "static/js/main.0e2fec64.js"
   ]
 }
