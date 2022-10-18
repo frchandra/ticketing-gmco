@@ -120,13 +120,10 @@ class PaymentController extends Controller{
              * Create QR code for each seat
              */
             $uniqueKey=strtoupper(substr(sha1(microtime()), rand(0, 5), 6));
-            \QrCode::size(300)->format('png')->generate(env('APP_URL')."/seat-info/{$uniqueKey}", "/home/u1545269/public_html/api.gmco-event.com/storage/app/qr/{$seat['seat_name']}.png");
+            \QrCode::size(300)->format('png')->generate("https://gmco-event.com/seat-info/{$uniqueKey}", "/home/u1545269/public_html/api.gmco-event.com/storage/app/qr/{$seat['seat_name']}.png");
 
             $this->seatService->updateSeatAvailability($seat, $uniqueKey);
         }
-        $buyer = Buyer::whereBuyerId($seat['buyer_id'])->first();
-        $this->emailService->sentConfirmationToUser($buyer, $seats);
-
         /**
          * Transaction status is sent from midtrans API service
          * see "transaction status" from midtran's docs
