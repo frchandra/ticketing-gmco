@@ -131,7 +131,7 @@ class PaymentController extends Controller{
             $this->emailService->sentConfirmationToUser($buyer, $seats);
         }
 
-        if($transactionStatus == "expired"){
+        if($transactionStatus == "expire"){
             foreach ($seats as $seat) {
                 $this->seatService->updateSeatAvailabilityToGreen($seat);
             }
