@@ -86,7 +86,7 @@ class PaymentController extends Controller{
      */
     public function callbackHandler(Request $request){
         \Midtrans\Config::$isProduction = true;
-        \Midtrans\Config::$serverKey = "Mid-server-nc65gz2NYVx7OPINLv-xcCgq";
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
         $notif = new \Midtrans\Notification();
 
         $transactionStatus = $notif->transaction_status;
@@ -110,7 +110,6 @@ class PaymentController extends Controller{
             error_log('no transaction id found at'.$order_id);
             return Response::HTTP_OK;
         }
-
         /**
          * Update seat availability information for each seat the user pay
          */
