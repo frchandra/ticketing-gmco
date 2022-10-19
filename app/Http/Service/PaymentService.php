@@ -11,7 +11,6 @@ use function array_push;
 use function config;
 use function count;
 use function error_log;
-use function implode;
 
 class PaymentService{
     public function invokeMidtrans($paymentDetails){
@@ -70,7 +69,9 @@ class PaymentService{
             /**
              * Upsert order request to DB
              */
+            \DB::beginTransaction();
             $buyer = Buyer::updateOrCreate($userData, $userPhone);
+            \DB::commit();
         }
         else{
             throw ValidationException::withMessages(["message" => "Jumlah pembelian tiket maksimal per orang adalah 5. Sudah " . count($buyerPreviousSeats) . " tiket/kursi yang terasosiasi dengan email ini. Silakan ulang pemesan menggunakan email yang berbeda"]);

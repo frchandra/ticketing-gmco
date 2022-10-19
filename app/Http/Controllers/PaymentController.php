@@ -9,25 +9,21 @@ use App\Http\Service\SeatService;
 use App\Models\Buyer;
 use App\Models\OrderLog;
 
-use Carbon\Carbon;
+
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use mysql_xdevapi\Exception;
-use function array_push;
 use function config;
-use function env;
 use function error_log;
 
 use function json_decode;
 use function microtime;
 use function rand;
 use Symfony\Component\HttpFoundation\Response;
-use function rescue;
 use function response;
 use function sha1;
 use function strtoupper;
 use function substr;
-use function view;
+
 
 
 
@@ -129,7 +125,6 @@ class PaymentController extends Controller{
                  */
                 $uniqueKey=strtoupper(substr(sha1(microtime()), rand(0, 5), 6));
                 \QrCode::size(300)->format('png')->generate("https://gmco-event.com/seat-info/{$uniqueKey}", "/home/u1545269/public_html/api.gmco-event.com/storage/app/qr/{$seat['seat_name']}.png");
-
                 $this->seatService->updateSeatAvailabilityToRed($seat, $uniqueKey);
             }
             $buyer = Buyer::whereBuyerId($seat['buyer_id'])->first();

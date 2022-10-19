@@ -15,11 +15,10 @@ class OwnerController extends Controller{
      * helper function to prepare the data about a particular seat
      */
     private function setUserData($seat, $unique){
-        
-        
-        
+        \DB::beginTransaction();
         $buyer = TicketOwnership::whereSeatId($seat['seat_id'])->first();
         $buyer = Buyer::whereBuyerId($buyer['buyer_id'])->first();
+        \DB::commit();
         $data['fname'] = $buyer['first_name'];
         $data['lname'] = $buyer['last_name'];
         $data['email'] = $buyer['email'];
@@ -66,16 +65,24 @@ class OwnerController extends Controller{
     public function setAttend(Request $request,$unique){
         $updateTo  = $request->only('updateTicketStatus')['updateTicketStatus'];
         if($updateTo == "attend"){
+            \DB::beginTransaction();
             Seat::whereLink($unique)->update(['ticket_status' => "attend"]);
+            \DB::commit();
         }
         else if($updateTo == "exchangedModified"){
+            \DB::beginTransaction();
             Seat::whereLink($unique)->update(['ticket_status' => "exchangedModified"]);
+            \DB::commit();
         }
         else if($updateTo == "exchangedNotAttend"){
+            \DB::beginTransaction();
             Seat::whereLink($unique)->update(['ticket_status' => "exchangedNotAttend"]);
+            \DB::commit();
         }
         else if($updateTo == "notExchanged"){
+            \DB::beginTransaction();
             Seat::whereLink($unique)->update(['ticket_status' => "notExchanged"]);
+            \DB::commit();
         }
 
         return response($unique, Response::HTTP_OK);
@@ -87,9 +94,9 @@ class OwnerController extends Controller{
      */
     public function seatInfo($unique){
 
-        
+
         $seat = Seat::whereLink($unique)->first();
-        
+
         if(!$seat){
             return response()->json(["status"=>"fail", "message"=>"maaf, kursi dengan kode unik ini tidak ada"], 400);
         }
