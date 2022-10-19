@@ -29,7 +29,7 @@ class SeatService{
         \DB::commit();
     }
 
-    public function updateSeatAvailability($seat, $uniqueKey){
+    public function updateSeatAvailabilityToRed($seat, $uniqueKey){
         \DB::beginTransaction();
         Seat::whereName($seat['seat_name'])->update(['link' => $uniqueKey]);
         Seat::whereName($seat['seat_name'])->update(['is_reserved'=>config('constants.MAX_VALUE')]);
@@ -37,6 +37,12 @@ class SeatService{
             'seat_id' => $seat['seat_id'],
             'buyer_id' => $seat['buyer_id']
         ]);
+        \DB::commit();
+    }
+
+    public function updateSeatAvailabilityToGreen($seat){
+        \DB::beginTransaction();
+        Seat::whereName($seat['seat_name'])->update(['is_reserved'=>0]);
         \DB::commit();
     }
 
