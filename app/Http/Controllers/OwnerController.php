@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buyer;
+use App\Models\OrderLog;
 use App\Models\Seat;
 use App\Models\TicketOwnership;
 use Illuminate\Http\Request;
@@ -16,7 +17,8 @@ class OwnerController extends Controller{
      */
     private function setUserData($seat, $unique){
         \DB::beginTransaction();
-        $buyer = TicketOwnership::whereSeatId($seat['seat_id'])->first();
+        // $buyer = TicketOwnership::whereSeatId($seat['seat_id'])->first(); some how there is redundancy in user_id field in from ticketOwnership, so i fetch from orderlog table for faster solution
+        $buyer = OrderLog::whereSeatId($seat['seat_id'])->where("confirmation", "=", "settlement")->first();
         $buyer = Buyer::whereBuyerId($buyer['buyer_id'])->first();
         \DB::commit();
         $data['fname'] = $buyer['first_name'];
